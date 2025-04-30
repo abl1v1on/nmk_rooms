@@ -1,3 +1,4 @@
+import bcrypt
 from typing import Annotated
 from fastapi import Depends
 from sqlalchemy import select
@@ -36,6 +37,8 @@ class UserAPIService:
         if await self.__is_exists(tg_id=user.tg_id):
             raise UserAlreadyExistsException('tg_id')
 
+        user.password = self.__hash_password(user.password)
+
         new_user = User(**user.model_dump())
         self.session.add(new_user)
         await self.session.commit()
@@ -44,6 +47,14 @@ class UserAPIService:
     async def __is_exists(self, **by) -> bool:
         query = select(select(User).filter_by(**by).exists())
         return (await self.session.execute(query)).scalar()
+
+    @staticmethod
+    def __hash_password(pwd: str) -> bytes:
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(
+            pwd.encode(),
+            salt
+        )
 
 
 def get_service(session: SESSION_DEP) -> UserAPIService:
