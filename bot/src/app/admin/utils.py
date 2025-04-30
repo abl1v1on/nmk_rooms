@@ -1,0 +1,17 @@
+import httpx
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator
+
+
+base_url = 'http://localhost:8000/api/v1/'
+
+
+@asynccontextmanager
+async def get_client() -> AsyncGenerator[httpx.AsyncClient, None]:
+    async with httpx.AsyncClient(base_url=base_url) as client:
+        yield client
+
+
+async def create_user(user: dict) -> None:
+    async with get_client() as client:
+        response = await client.post(url='users/', json=user)
