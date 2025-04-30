@@ -88,3 +88,58 @@ body {
     max-width: 600px;
     margin: 0 auto;
 }
+
+/* Стили для 404 страницы */
+.nmk-404 {
+    background: linear-gradient(135deg, var(--primary) 0%, #003366 100%);
+    position: relative;
+}
+
+.nmk-404-title {
+    font-size: 6rem;
+    line-height: 1;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+}
+
+.nmk-404 .hero-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media screen and (max-width: 768px) {
+    .nmk-404-title {
+        font-size: 4rem;
+    }
+
+    .nmk-404 .subtitle {
+        font-size: 1.5rem;
+    }
+
+    .nmk-404 .buttons {
+        flex-direction: column;
+    }
+
+    .nmk-404 .button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+.navbar-brand .image {
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover .image {
+    transform: scale(1.1);
+}
+
+@media screen and (max-width: 768px) {
+    .navbar-brand .title {
+        font-size: 1rem;
+    }
+    .navbar-brand .image {
+        width: 24px;
+        height: 24px;
+    }
+}
