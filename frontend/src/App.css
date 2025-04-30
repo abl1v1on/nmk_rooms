@@ -1,0 +1,90 @@
+@import 'bulma/css/bulma.css';
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+
+:root {
+    --primary: #0066cc; /* Синий цвет НМК */
+    --secondary: #ffffff;
+    --dark: #333333;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 52px;
+}
+
+.navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hall-card {
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.hall-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hall-card .image {
+    overflow: hidden;
+}
+
+.hall-card img {
+    transition: transform 0.3s ease;
+}
+
+.hall-card:hover img {
+    transform: scale(1.05);
+}
+
+.auth-section {
+    min-height: calc(100vh - 52px);
+    display: flex;
+    align-items: center;
+}
+
+.auth-box {
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (max-width: 768px) {
+    .hero .title {
+        font-size: 2rem;
+    }
+
+    .hero .subtitle {
+        font-size: 1.25rem;
+    }
+
+    .hall-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-box .buttons {
+        flex-direction: column;
+    }
+
+    .filter-box .button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+.booking-time .button {
+    margin-bottom: 0.5rem;
+}
+
+.booking-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
