@@ -5,6 +5,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from string import ascii_letters, digits
 
+from . import utils
 from .filters import IsAdmin
 from .keyboards import admin_kb
 from .forms import CreateUserForm
@@ -144,7 +145,12 @@ async def set_user_password_state(message: Message, state: FSMContext) -> None:
 
     await state.update_data(password=password)
 
-    data = await state.get_data()
-    await message.answer(str(data))
+    user = await state.get_data()
 
-    await state.clear()
+    try:
+        await utils.create_user(user)
+        await message.answer('✅ Пользователь успешно добавлен')
+    except:
+        await message.answer('❌ При создании пользователя произошла ошибка')
+    finally:
+        await state.clear()
