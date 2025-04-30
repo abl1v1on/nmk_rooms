@@ -18,8 +18,8 @@ class GetUserSchema(BaseUserSchema):
 class CreateUserSchema(BaseUserSchema):
     password: Annotated[str, MinLen(8), MaxLen(30)]
 
-    @classmethod
     @field_validator('password')
+    @classmethod
     def validate_password(cls, pwd: str) -> str:
         pwd = pwd.strip()
 

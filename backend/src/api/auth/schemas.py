@@ -8,8 +8,8 @@ class AuthUserSchema(BaseModel):
     email: Annotated[EmailStr, MaxLen(255)]
     password: Annotated[str, MinLen(8), MaxLen(30)]
 
-    @classmethod
     @field_validator('password')
+    @classmethod
     def validate_password(cls, pwd: str) -> str:
         pwd = pwd.strip()
 
@@ -49,3 +49,7 @@ class AuthUserSchema(BaseModel):
             raise ValueError('Пароль должен содержать хотя бы один спец-символ')
 
         return pwd
+
+
+class AccessTokenSchema(BaseModel):
+    token: str
