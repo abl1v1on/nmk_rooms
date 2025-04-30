@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 
-base_url = 'http://localhost:8000/api/v1/'
+base_url = 'http://backend:8000/api/v1/'
 
 
 @asynccontextmanager
