@@ -1,13 +1,13 @@
 import asyncio
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message
-from aiogram.filters import CommandStart
 
 from config import settings
+from app import main_router
 
 
 bot = Bot(token=settings.bot.token)
 dp = Dispatcher()
+dp.include_router(main_router)
 
 
 async def main() -> None:
