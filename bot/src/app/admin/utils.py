@@ -15,3 +15,14 @@ async def get_client() -> AsyncGenerator[httpx.AsyncClient, None]:
 async def create_user(user: dict) -> None:
     async with get_client() as client:
         response = await client.post(url='users/', json=user)
+
+
+async def get_users() -> list[str]:
+    async with get_client() as client:
+        response = await client.get(url='users/')
+        users = response.json()
+        pattern = (
+            lambda index, user:
+            f'{index + 1}. {user['first_name']} {user['last_name']} - {user['email']}'
+        )
+        return [pattern(index, user) for index, user in enumerate(users)]

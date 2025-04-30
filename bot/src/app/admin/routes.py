@@ -154,3 +154,8 @@ async def set_user_password_state(message: Message, state: FSMContext) -> None:
         await message.answer('❌ При создании пользователя произошла ошибка')
     finally:
         await state.clear()
+
+
+@router.message(F.text == '👥 Список пользователей 👥', is_admin)
+async def handle_users_list_cmd(message: Message):
+    await message.answer('\n'.join(await utils.get_users()))
