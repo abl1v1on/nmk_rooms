@@ -2,12 +2,14 @@ import uvicorn
 from fastapi import FastAPI
 
 from core import settings
+from api import main_api_router
 
 
 def get_app() -> FastAPI:
     fastapi_app = FastAPI(
         title='NMK Rooms'
     )
+    fastapi_app.include_router(main_api_router)
     return fastapi_app
 
 
