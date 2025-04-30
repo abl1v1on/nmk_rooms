@@ -1,8 +1,7 @@
 from typing import Annotated
 from string import ascii_letters, digits
 from annotated_types import MinLen, MaxLen
-from pydantic import BaseModel, EmailStr, field_validator
-from pydantic.v1 import PositiveInt
+from pydantic import BaseModel, EmailStr, field_validator, PositiveInt
 
 
 class BaseUserSchema(BaseModel):
