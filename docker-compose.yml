@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: backend_container
+    ports:
+      - "8000:8000"
+    networks:
+      - nmk_rooms_network
+
+  bot:
+    build:
+      context: ./bot
+    container_name: bot_container
+    networks:
+      - nmk_rooms_network
+
+networks:
+  nmk_rooms_network:
+    driver: bridge
