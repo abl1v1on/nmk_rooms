@@ -18,9 +18,16 @@ class ServerSettings(BaseModel):
     port: int = 8000
 
 
+class AuthJWTSettings(BaseModel):
+    algorithm: str = 'RS256'
+    private_key_path: Path = BASE_DIR / 'certs' / 'jwt-private.pem'
+    public_key_path: Path = BASE_DIR / 'certs' / 'jwt-public.pem'
+
+
 class Settings(BaseSettings):
     db: DataBaseSettings = DataBaseSettings()
     server: ServerSettings = ServerSettings()
+    auth_jwt: AuthJWTSettings = AuthJWTSettings()
 
 
 settings = Settings()
