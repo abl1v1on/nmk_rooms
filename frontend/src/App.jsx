@@ -1,7 +1,11 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom';
 
+// components
 import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
+
+// pages
 import MainPage from "./pages/MainPage.jsx";
 
 
@@ -11,7 +15,8 @@ export default function App() {
         <Routes>
             <Route path="/" element={<MainPage />} />
         </Routes>
-        <Header/>
+        <Header />
+        <Footer />
     </>
   )
 }
