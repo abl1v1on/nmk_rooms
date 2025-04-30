@@ -1,4 +1,5 @@
 import jwt
+import bcrypt
 
 from core import settings
 
@@ -24,3 +25,18 @@ class AuthAPIService:
             algorithms=[self.algorithm]
         )
         return data
+
+    @staticmethod
+    def __verify_password(pwd: str, hashed_pwd: bytes) -> bool:
+        return bcrypt.checkpw(
+            pwd.encode(),
+            hashed_pwd
+        )
+
+    @staticmethod
+    def __hash_password(pwd: str) -> bytes:
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(
+            pwd.encode(),
+            salt
+        )
