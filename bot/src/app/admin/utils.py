@@ -14,7 +14,7 @@ async def get_client() -> AsyncGenerator[httpx.AsyncClient, None]:
 
 async def create_user(user: dict) -> None:
     async with get_client() as client:
-        response = await client.post(url='users/', json=user)
+        await client.post(url='users/', json=user)
 
 
 async def get_users() -> list[str]:
@@ -26,3 +26,13 @@ async def get_users() -> list[str]:
             f'{index + 1}. {user['first_name']} {user['last_name']} - {user['email']}'
         )
         return [pattern(index, user) for index, user in enumerate(users)]
+
+
+async def get_locations() -> list[str]:
+    async with get_client() as client:
+        response = await client.get(url='locations/')
+        locations = response.json()
+        return [
+            f'{index + 1}. {location['address']}'
+            for index, location in enumerate(locations)
+        ]
