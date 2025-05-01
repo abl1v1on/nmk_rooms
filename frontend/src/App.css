@@ -196,3 +196,50 @@ body {
         font-size: 1.25rem;
     }
 }
+
+/* Стили для страницы залов */
+.hall-card {
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid #eee;
+}
+
+.hall-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.hall-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Адаптивные стили */
+@media screen and (max-width: 768px) {
+    .hall-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .hall-features {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .filter-box .buttons {
+        flex-direction: column;
+    }
+
+    .filter-box .button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
