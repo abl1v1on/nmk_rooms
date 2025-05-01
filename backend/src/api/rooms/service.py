@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import Depends
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import Room, SESSION_DEP
@@ -15,12 +16,12 @@ class RoomAPIService(BaseAPIService[Room]):
         super().__init__(session, model=Room)
 
     async def get_rooms(self) -> list[Room]:
-        query = select(Room)
+        query = select(Room).options(selectinload(Room.location))
         rooms = (await self.session.execute(query)).scalars().all()
         return rooms
 
     async def get_room(self, **by) -> Room | None:
-        query = select(Room).filter_by(**by)
+        query = select(Room).filter_by(**by).options(selectinload(Room.location))
         room = (await self.session.execute(query)).scalar_one_or_none()
 
         if not room:
@@ -38,7 +39,13 @@ class RoomAPIService(BaseAPIService[Room]):
         new_room = Room(**room.model_dump())
         self.session.add(new_room)
         await self.session.commit()
-        return new_room
+
+        query = select(Room) \
+            .options(selectinload(Room.location)) \
+            .where(Room.id == new_room.id)
+        room_with_location = (await self.session.execute(query)).scalar()
+
+        return room_with_location
 
 
 def get_service(session: SESSION_DEP) -> RoomAPIService:
