@@ -28,6 +28,11 @@ async def get_users() -> list[str]:
         return [pattern(index, user) for index, user in enumerate(users)]
 
 
+async def create_location(location: dict) -> None:
+    async with get_client() as client:
+        await client.post(url='locations/', json=location)
+
+
 async def get_locations() -> list[str]:
     async with get_client() as client:
         response = await client.get(url='locations/')
