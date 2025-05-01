@@ -8,6 +8,7 @@ import Footer from "./components/Footer.jsx";
 // pages
 import MainPage from "./pages/MainPage.jsx";
 import HallListPage from "./pages/HallListPage.jsx";
+import HallDetailsPage from "./pages/HallDetailsPage.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 
 
@@ -16,7 +17,8 @@ export default function App() {
     <>
         <Routes>
             <Route path="/" element={<MainPage />} />
-            <Route path="/halls/" element={<HallListPage />} />
+            <Route path="/halls" element={<HallListPage />} />
+            <Route path="/halls/details" element={<HallDetailsPage />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Header />
