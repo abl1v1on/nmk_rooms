@@ -11,3 +11,11 @@ class CreateUserForm(StatesGroup):
 
 class CreateLocationForm(StatesGroup):
     address = State()
+
+
+class CreateRoomForm(StatesGroup):
+    number = State()
+    capacity = State()
+    description = State()
+    image = State()
+    location_id = State()
