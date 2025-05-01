@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+
+
 export default function HallCard() {
     return (
         <div className="column is-one-third">
@@ -37,12 +40,12 @@ export default function HallCard() {
                             </span>
                         </div>
                         <div className="buttons">
-                            <a href="" className="button is-primary is-outlined is-fullwidth">
+                            <Link to="/halls/details" className="button is-primary is-outlined is-fullwidth">
                                 <span>Подробнее</span>
                                 <span className="icon">
                                     <i className="fas fa-arrow-right"></i>
                                 </span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
