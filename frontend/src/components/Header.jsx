@@ -21,7 +21,7 @@ export default function Header() {
                         <a className="navbar-item" href="#">Мои бронирования</a>
                         <div className="navbar-item">
                             <div className="buttons">
-                                <a className="button is-primary" href="#">Войти</a>
+                                <Link className="button is-primary" to="/login">Войти</Link>
                             </div>
                         </div>
                     </div>
