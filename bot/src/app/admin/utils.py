@@ -41,3 +41,18 @@ async def get_locations() -> list[str]:
             f'{index + 1}. {location['address']}'
             for index, location in enumerate(locations)
         ]
+
+
+async def create_room(room: dict) -> None:
+    async with get_client() as client:
+        await client.post(url='rooms/', json=room)
+
+
+async def get_rooms() -> list[str]:
+    async with get_client() as client:
+        response = await client.get(url='rooms/')
+        rooms = response.json()
+        return [
+            f'{index + 1}. Зал {room['number']} ({room['location']['address']})'
+            for index, room in enumerate(rooms)
+        ]
