@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+
+
 export default function MainPage() {
     return (
         <>
@@ -6,12 +9,12 @@ export default function MainPage() {
                 <div className="container has-text-centered">
                     <h1 className="title is-2 has-text-weight-bold mb-4">Корпоративная система бронирования</h1>
                     <p className="subtitle is-4">Удобное резервирование конференц-залов предприятия</p>
-                    <a href="" className="button is-primary is-medium mt-3">
+                    <Link to="/halls" className="button is-primary is-medium mt-3">
                         <span>Перейти к бронированию</span>
                         <span className="icon">
                             <i className="fas fa-arrow-right"></i>
                         </span>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>
@@ -96,12 +99,12 @@ export default function MainPage() {
                         </div>
 
                         <div className="has-text-centered mt-6">
-                            <a href="" className="button is-primary is-medium">
+                            <Link to="/halls" className="button is-primary is-medium">
                                 <span>Начать бронирование</span>
                                 <span className="icon">
                                     <i className="fas fa-arrow-right"></i>
                                 </span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
