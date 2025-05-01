@@ -8,7 +8,7 @@ from string import ascii_letters, digits
 from . import utils
 from .filters import IsAdmin
 from .keyboards import admin_kb
-from .forms import CreateUserForm
+from .forms import CreateUserForm, CreateLocationForm
 
 
 router = Router(name='admin_router')
@@ -31,6 +31,7 @@ async def handle_add_user_cmd(message: Message, state: FSMContext) -> None:
 
 @router.message(CreateUserForm.email)
 async def set_user_email_state(message: Message, state: FSMContext) -> None:
+    # TODO: добавить проверку на существующий email
     email = message.text
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
@@ -87,6 +88,7 @@ async def set_user_last_name_state(message: Message, state: FSMContext) -> None:
 
 @router.message(CreateUserForm.tg_id)
 async def set_user_tg_id_state(message: Message, state: FSMContext) -> None:
+    # TODO: добавить проверку на существующий Telegram ID
     tg_id = message.text
 
     try:
@@ -159,6 +161,35 @@ async def set_user_password_state(message: Message, state: FSMContext) -> None:
 @router.message(F.text == '👥 Список пользователей 👥', is_admin)
 async def handle_users_list_cmd(message: Message) -> None:
     await message.answer('\n'.join(await utils.get_users()))
+
+
+@router.message(F.text == '🗺 Добавить локацию 🗺', is_admin)
+async def handle_add_location_cmd(message: Message, state: FSMContext) -> None:
+    await message.answer('Введите адрес')
+    await state.set_state(CreateLocationForm.address)
+
+
+@router.message(CreateLocationForm.address)
+async def set_location_address_state(message: Message, state: FSMContext) -> None:
+    # TODO: добавить проверку на существующий адрес
+    address = message.text
+
+    if not (5 <= len(address) <= 255):
+        await message.answer(
+            'Длина адреса должна быть от 5 до 255 (включительно) символов'
+        )
+        return
+
+    await state.update_data(address=address)
+    location = await state.get_data()
+
+    try:
+        await utils.create_location(location)
+        await message.answer('✅ Локация успешно добавлена')
+    except:
+        await message.answer('❌ При создании локации произошла ошибка')
+    finally:
+        await state.clear()
 
 
 @router.message(F.text == '🗺 Список локаций 🗺', is_admin)
