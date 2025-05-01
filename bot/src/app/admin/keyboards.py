@@ -11,5 +11,9 @@ admin_kb = ReplyKeyboardMarkup(
             KeyboardButton(text='🗺 Добавить локацию 🗺'),
             KeyboardButton(text='🗺 Список локаций 🗺')
         ],
+        [
+            KeyboardButton(text='🏠 Добавить конференц зал 🏠'),
+            KeyboardButton(text='🏠 Список конференц залов 🏠')
+        ],
     ], resize_keyboard=True, one_time_keyboard=True
 )
