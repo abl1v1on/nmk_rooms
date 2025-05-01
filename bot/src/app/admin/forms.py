@@ -7,3 +7,7 @@ class CreateUserForm(StatesGroup):
     last_name = State()
     tg_id = State()
     password = State()
+
+
+class CreateLocationForm(StatesGroup):
+    address = State()
