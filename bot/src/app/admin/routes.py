@@ -8,7 +8,11 @@ from string import ascii_letters, digits
 from . import utils
 from .filters import IsAdmin
 from .keyboards import admin_kb
-from .forms import CreateUserForm, CreateLocationForm
+from .forms import (
+    CreateUserForm,
+    CreateLocationForm,
+    CreateRoomForm
+)
 
 
 router = Router(name='admin_router')
@@ -195,3 +199,114 @@ async def set_location_address_state(message: Message, state: FSMContext) -> Non
 @router.message(F.text == '🗺 Список локаций 🗺', is_admin)
 async def handle_locations_list_cmd(message: Message) -> None:
     await message.answer('\n'.join(await utils.get_locations()))
+
+
+@router.message(F.text == '🏠 Добавить конференц зал 🏠', is_admin)
+async def handle_add_room_cmd(message: Message, state: FSMContext) -> None:
+    await message.answer('Введите номер зала')
+    await state.set_state(CreateRoomForm.number)
+
+
+@router.message(CreateRoomForm.number)
+async def set_room_number_state(message: Message, state: FSMContext) -> None:
+    # TODO: добавить проверку на существующий номер зала
+    number = message.text
+
+    try:
+        number = int(number)
+    except ValueError:
+        await message.answer('Номер зала должен быть целым числом')
+        return
+
+    if number <= 0:
+        await message.answer('Номер зала должен быть больше нуля')
+        return
+
+    await state.update_data(number=number)
+    await message.answer('Введите вместимость зала')
+    await state.set_state(CreateRoomForm.capacity)
+
+
+@router.message(CreateRoomForm.capacity)
+async def set_room_capacity_state(message: Message, state: FSMContext) -> None:
+    capacity = message.text
+
+    try:
+        capacity = int(capacity)
+    except ValueError:
+        await message.answer('Вместимость зала должна быть целым числом')
+        return
+
+    if capacity <= 0:
+        await message.answer('Вместимость зала должна быть больше нуля')
+        return
+
+    await state.update_data(capacity=capacity)
+    await message.answer('Введите описание зала')
+    await state.set_state(CreateRoomForm.description)
+
+
+@router.message(CreateRoomForm.description)
+async def set_room_description_state(message: Message, state: FSMContext) -> None:
+    description = message.text
+
+    if not (5 <= len(description) <= 100):
+        await message.answer(
+            'Длина описание должна быть от 5 до 100 (включительно) символов'
+        )
+        return
+
+    await state.update_data(description=description)
+    await message.answer(
+        'Введите ссылку на изображение (или "-", если оно не требуется)'
+    )
+    await state.set_state(CreateRoomForm.image)
+
+
+@router.message(CreateRoomForm.image)
+async def set_room_image_state(message: Message, state: FSMContext) -> None:
+    # TODO: добавить валидацию на соответствие ссылке
+    image = message.text
+
+    if image == '-':
+        image = None
+    else:
+        if len(image) >= 10000:
+            await message.answer('Ссылка на изображение слишком длинная')
+            return
+
+    await state.update_data(image=image)
+    await message.answer('Введите ID локации')
+    await state.set_state(CreateRoomForm.location_id)
+
+
+@router.message(CreateRoomForm.location_id)
+async def set_room_location_id_state(message: Message, state: FSMContext) -> None:
+    # TODO: добавить проверку на существование локации с введенным Location ID
+    location_id = message.text
+
+    try:
+        location_id = int(location_id)
+    except ValueError:
+        await message.answer('ID локации должен быть целым числом')
+        return
+
+    if location_id <= 0:
+        await message.answer('ID локации должен быть больше нуля')
+        return
+
+    await state.update_data(location_id=location_id)
+    room = await state.get_data()
+
+    try:
+        await utils.create_room(room)
+        await message.answer('✅ Зал успешно добавлен')
+    except:
+        await message.answer('❌ При создании зала произошла ошибка')
+    finally:
+        await state.clear()
+
+
+@router.message(F.text == '🏠 Список конференц залов 🏠', is_admin)
+async def handle_rooms_list_cmd(message: Message):
+    await message.answer('\n'.join(await utils.get_rooms()))
