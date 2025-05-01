@@ -157,5 +157,10 @@ async def set_user_password_state(message: Message, state: FSMContext) -> None:
 
 
 @router.message(F.text == '👥 Список пользователей 👥', is_admin)
-async def handle_users_list_cmd(message: Message):
+async def handle_users_list_cmd(message: Message) -> None:
     await message.answer('\n'.join(await utils.get_users()))
+
+
+@router.message(F.text == '🗺 Список локаций 🗺', is_admin)
+async def handle_locations_list_cmd(message: Message) -> None:
+    await message.answer('\n'.join(await utils.get_locations()))
