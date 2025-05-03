@@ -2,7 +2,8 @@ from typing import TYPE_CHECKING
 from sqlalchemy import String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import Base, rooms_equipments
+from . import Base
+from .rooms_equipments import rooms_equipments
 
 if TYPE_CHECKING:
     from . import Room
