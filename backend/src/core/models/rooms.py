@@ -6,7 +6,7 @@ from . import Base
 from .rooms_equipments import rooms_equipments
 
 if TYPE_CHECKING:
-    from . import Location, Equipment
+    from . import Location, Equipment, Booking
 
 
 class Room(Base):
@@ -26,6 +26,7 @@ class Room(Base):
         secondary=rooms_equipments,
         back_populates='rooms'
     )
+    booking: Mapped[list['Booking']] = relationship(back_populates='room')
 
     __table_args__ = (
         CheckConstraint('number >= 1', name='check_room_number_ge_1'),
