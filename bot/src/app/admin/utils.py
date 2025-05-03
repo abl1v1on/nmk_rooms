@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 
-base_url = 'http://backend:8000/api/v1/'
+base_url = 'http://localhost:8000/api/v1/'
 
 
 @asynccontextmanager
@@ -55,4 +55,19 @@ async def get_rooms() -> list[str]:
         return [
             f'{index + 1}. Зал {room['number']} ({room['location']['address']})'
             for index, room in enumerate(rooms)
+        ]
+
+
+async def create_equipment(equipment: dict) -> None:
+    async with get_client() as client:
+        await client.post(url='equipments/', json=equipment)
+
+
+async def get_equipments() -> list[str]:
+    async with get_client() as client:
+        response = await client.get(url='equipments/')
+        equipments = response.json()
+        return [
+            f'{index + 1}. {equipment['name']}'
+            for index, equipment in enumerate(equipments)
         ]
