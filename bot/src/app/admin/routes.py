@@ -12,7 +12,8 @@ from .forms import (
     CreateUserForm,
     CreateLocationForm,
     CreateRoomForm,
-    CreateEquipmentForm
+    CreateEquipmentForm,
+    AddEquipmentsToRoomForm
 )
 
 
@@ -337,6 +338,59 @@ async def set_room_location_id_state(message: Message, state: FSMContext) -> Non
         await message.answer('✅ Зал успешно добавлен')
     except:
         await message.answer('❌ При создании зала произошла ошибка')
+    finally:
+        await state.clear()
+
+
+@router.message(F.text == '💻 Добавить оборудование в зал 💻', is_admin)
+async def handle_add_equipments_to_room_cmd(
+        message: Message,
+        state: FSMContext
+    ) -> None:
+    await message.answer('Введите ID зала')
+    await state.set_state(AddEquipmentsToRoomForm.room_id)
+
+
+@router.message(AddEquipmentsToRoomForm.room_id)
+async def set_room_id_state(message: Message, state: FSMContext) -> None:
+    # TODO: добавить проверку на существование выбранной комнаты
+    room_id = message.text
+
+    try:
+        room_id = int(room_id)
+    except ValueError:
+        await message.answer('ID комнаты должен быть целым числом')
+        return
+
+    if room_id <= 0:
+        await message.answer('ID комнаты должен быть больше нуля')
+        return
+
+    await state.update_data(room_id=room_id)
+    await message.answer(
+        'Введите названия оборудований через запятую (проектор, планшет, ноутбук)'
+    )
+    await state.set_state(AddEquipmentsToRoomForm.equipments)
+
+
+@router.message(AddEquipmentsToRoomForm.equipments)
+async def set_rooms_equipments_state(message: Message, state: FSMContext) -> None:
+    equipments = list(map(
+        lambda equipment: {'name': equipment.strip().capitalize()},
+        message.text.split(',')
+    ))
+
+    await state.update_data(equipments=equipments)
+
+    data = await state.get_data()
+
+    try:
+        await utils.add_equipments_to_room(data)
+        await message.answer('✅ Оборудование успешно добавлено')
+    except:
+        await message.answer(
+            '❌ При попытке добавления оборудования произошла ошибка'
+        )
     finally:
         await state.clear()
 
