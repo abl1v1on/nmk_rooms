@@ -3,6 +3,7 @@ from typing import Annotated
 from annotated_types import MinLen, MaxLen, Gt
 
 from api.locations.schemas import GetLocationSchema
+from api.equipments.schemas import CreateEquipmentSchema
 
 
 class BaseRoomSchema(BaseModel):
@@ -19,3 +20,8 @@ class GetRoomSchema(BaseRoomSchema):
 
 class CreateRoomSchema(BaseRoomSchema):
     location_id: Annotated[int, Gt(0)]
+
+
+class AddEquipmentsToRoomSchema(BaseModel):
+    room_id: Annotated[int, Gt(0)]
+    equipments: list[CreateEquipmentSchema]
