@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import Depends
+from fastapi import Depends, Response, status
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -46,6 +46,21 @@ class RoomAPIService(BaseAPIService[Room]):
         room_with_location = (await self.session.execute(query)).scalar()
 
         return room_with_location
+
+    async def delete_room(self, room_id: int) -> Response:
+        deletable_room = await self.get_room(id=room_id)
+        await self.session.delete(deletable_room)
+        await self.session.commit()
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    async def delete_all_rooms(self) -> Response:
+        rooms = await self.get_rooms()
+
+        for room in rooms:
+            await self.session.delete(room)
+
+        await self.session.commit()
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 def get_service(session: SESSION_DEP) -> RoomAPIService:
