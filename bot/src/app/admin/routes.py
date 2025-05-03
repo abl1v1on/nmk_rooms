@@ -1,13 +1,13 @@
 import re
 from aiogram import Router, F
 from aiogram.types import Message
-from aiogram.filters import Command
+from aiogram.filters import Command, or_f
 from aiogram.fsm.context import FSMContext
 from string import ascii_letters, digits
 
 from . import utils
+from . import keyboards
 from .filters import IsAdmin
-from .keyboards import admin_kb
 from .forms import (
     CreateUserForm,
     CreateLocationForm,
@@ -19,12 +19,45 @@ router = Router(name='admin_router')
 is_admin = IsAdmin()
 
 
-@router.message(Command('admin'), is_admin)
+@router.message(or_f(Command('admin'), F.text == '⬅️ Назад ⬅️'), is_admin)
 async def handle_admin_cmd(message: Message) -> None:
     await message.answer(
         'Добро пожаловать в админ панель!',
-        reply_markup=admin_kb
+        reply_markup=keyboards.admin_kb
     )
+
+
+@router.message(F.text == '👥 Пользователи 👥', is_admin)
+async def handle_users_admin_cmd(message: Message) -> None:
+    await message.answer(
+        'Выберите действие',
+        reply_markup=keyboards.admin_users_kb
+    )
+
+
+@router.message(F.text == '🗺 Локации 🗺', is_admin)
+async def handle_locations_admin_cmd(message: Message) -> None:
+    await message.answer(
+        'Выберите действие',
+        reply_markup=keyboards.admin_locations_kb
+    )
+
+
+@router.message(F.text == '🏠 Конференц залы 🏠', is_admin)
+async def handle_rooms_admin_cmd(message: Message) -> None:
+    await message.answer(
+        'Выберите действие',
+        reply_markup=keyboards.admin_rooms_kb
+    )
+
+
+@router.message(F.text == '💻 Оборудование 💻')
+async def handle_equipments_admin_cmd(message: Message) -> None:
+    await message.answer(
+        'Выберите действие',
+        reply_markup=keyboards.admin_equipments_kb
+    )
+
 
 
 @router.message(F.text == '👤 Добавить пользователя 👤', is_admin)
