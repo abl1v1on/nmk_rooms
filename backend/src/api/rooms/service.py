@@ -7,7 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.models import Room, SESSION_DEP
 from api.base_api_service import BaseAPIService
 from api.locations.service import LocationAPIService
-from .schemas import CreateRoomSchema
+from api.equipments.service import EquipmentAPIService
+from .schemas import CreateRoomSchema, AddEquipmentsToRoomSchema
 from . import exceptions
 
 
@@ -21,7 +22,12 @@ class RoomAPIService(BaseAPIService[Room]):
         return rooms
 
     async def get_room(self, **by) -> Room | None:
-        query = select(Room).filter_by(**by).options(selectinload(Room.location))
+        query = select(Room) \
+            .filter_by(**by) \
+            .options(
+                selectinload(Room.location),
+                selectinload(Room.equipments)
+            )
         room = (await self.session.execute(query)).scalar_one_or_none()
 
         if not room:
@@ -46,6 +52,22 @@ class RoomAPIService(BaseAPIService[Room]):
         room_with_location = (await self.session.execute(query)).scalar()
 
         return room_with_location
+
+    async def add_equipments_to_room(
+            self,
+            equipments: AddEquipmentsToRoomSchema
+        ) -> None:
+        room = await self.get_room(id=equipments.room_id)
+        equipment_service = EquipmentAPIService(self.session)
+
+        for equipment in equipments.equipments:
+            equipment_obj = await equipment_service.get_equipment(
+                name=equipment.name
+            )
+            room.equipments.append(equipment_obj)
+
+        await self.session.commit()
+        return room
 
     async def delete_room(self, room_id: int) -> Response:
         deletable_room = await self.get_room(id=room_id)
