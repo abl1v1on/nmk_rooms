@@ -11,7 +11,8 @@ from .filters import IsAdmin
 from .forms import (
     CreateUserForm,
     CreateLocationForm,
-    CreateRoomForm
+    CreateRoomForm,
+    CreateEquipmentForm
 )
 
 
@@ -341,5 +342,40 @@ async def set_room_location_id_state(message: Message, state: FSMContext) -> Non
 
 
 @router.message(F.text == '🏠 Список конференц залов 🏠', is_admin)
-async def handle_rooms_list_cmd(message: Message):
+async def handle_rooms_list_cmd(message: Message) -> None:
     await message.answer('\n'.join(await utils.get_rooms()))
+
+
+@router.message(F.text == '💻 Добавить оборудование 💻', is_admin)
+async def handle_add_equipment_cmd(message: Message, state: FSMContext) -> None:
+    await message.answer('Введите название оборудования')
+    await state.set_state(CreateEquipmentForm.name)
+
+
+@router.message(CreateEquipmentForm.name)
+async def set_equipment_name_state(message: Message, state: FSMContext) -> None:
+    # TODO: добавить проверку на существующее название оборудование
+    name = message.text
+
+    if not (2 <= len(name) <= 100):
+        await message.answer(
+            'Длина название должна быть от 2 до 100 (включительно) символов'
+        )
+        return
+
+    await state.update_data(name=name)
+
+    equipment = await state.get_data()
+
+    try:
+        await utils.create_equipment(equipment)
+        await message.answer('✅ Оборудование успешно добавлено')
+    except:
+        await message.answer('❌ При добавлении оборудования произошла ошибка')
+    finally:
+        await state.clear()
+
+
+@router.message(F.text == '💻 Список оборудования 💻', is_admin)
+async def handle_equipments_list_cmd(message: Message) -> None:
+    await message.answer('\n'.join(await utils.get_equipments()))
