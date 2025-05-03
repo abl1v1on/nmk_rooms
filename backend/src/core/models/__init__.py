@@ -7,6 +7,8 @@ __all__ = [
     'Location',
     'Equipment',
     'rooms_equipments',
+    'Booking',
+    'BookingTimeEnum',
 ]
 
 from .base import Base
@@ -16,3 +18,4 @@ from .rooms import Room
 from .locations import Location
 from .equipments import Equipment
 from .rooms_equipments import rooms_equipments
+from .bookings import Booking, BookingTimeEnum
