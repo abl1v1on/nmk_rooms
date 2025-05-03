@@ -23,3 +23,8 @@ class CreateRoomForm(StatesGroup):
 
 class CreateEquipmentForm(StatesGroup):
     name = State()
+
+
+class AddEquipmentsToRoomForm(StatesGroup):
+    room_id = State()
+    equipments = State()
