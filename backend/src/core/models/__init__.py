@@ -6,6 +6,7 @@ __all__ = [
     'Room',
     'Location',
     'Equipment',
+    'rooms_equipments',
 ]
 
 from .base import Base
@@ -14,3 +15,4 @@ from .users import User
 from .rooms import Room
 from .locations import Location
 from .equipments import Equipment
+from .rooms_equipments import rooms_equipments

@@ -2,10 +2,10 @@ from typing import TYPE_CHECKING
 from sqlalchemy import String, ForeignKey, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import Base
+from . import Base, rooms_equipments
 
 if TYPE_CHECKING:
-    from . import Location
+    from . import Location, Equipment
 
 
 class Room(Base):
@@ -21,6 +21,10 @@ class Room(Base):
     )
 
     location: Mapped['Location'] = relationship(back_populates='rooms')
+    equipments: Mapped[list['Equipment']] = relationship(
+        secondary=rooms_equipments,
+        back_populates='rooms'
+    )
 
     __table_args__ = (
         CheckConstraint('number >= 1', name='check_room_number_ge_1'),
