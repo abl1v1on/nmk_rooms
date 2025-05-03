@@ -52,6 +52,9 @@ admin_rooms_kb = ReplyKeyboardMarkup(
             KeyboardButton(text='🏠 Список конференц залов 🏠')
         ],
         [
+            KeyboardButton(text='💻 Добавить оборудование в зал 💻'),
+        ],
+        [
             KeyboardButton(text='⬅️ Назад ⬅️')
         ]
     ], resize_keyboard=True, one_time_keyboard=True
