@@ -40,7 +40,7 @@ export default function HallCard({ hall }) {
                             </span>
                         </div>
                         <div className="buttons">
-                            <Link to="/halls/details" className="button is-primary is-outlined is-fullwidth">
+                            <Link to={`/halls/${hall.id}`} className="button is-primary is-outlined is-fullwidth">
                                 <span>Подробнее</span>
                                 <span className="icon">
                                     <i className="fas fa-arrow-right"></i>
