@@ -36,7 +36,7 @@ export default function HallListPage() {
         return (
             <div className="columns is-multiline mt-1">
                 {halls.map((hall) => (
-                    <HallCard key={hall.id} />
+                    <HallCard hall={hall} key={hall.id} />
                 ))}
             </div>
         )

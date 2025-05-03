@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 
 
-export default function HallCard() {
+export default function HallCard({ hall }) {
     return (
         <div className="column is-one-third">
             <div className="card hall-card">
                 <div className="card-image">
                     <figure className="image is-4by3">
-                        <img src="" alt="Зал 'Нефтяник'" />
+                        <img src={hall.image ? hall.image : `no-image.webp`} alt={hall.number} />
                     </figure>
                     <div className="card-badge">
                         <span className="tag is-primary">Корпус А</span>
