@@ -2,7 +2,12 @@ from fastapi import APIRouter
 from pydantic import PositiveInt
 
 from .service import SERVICE_DEP
-from .schemas import GetRoomSchema, CreateRoomSchema
+from .schemas import (
+    GetRoomSchema,
+    CreateRoomSchema,
+    AddEquipmentsToRoomSchema
+)
+from api.equipments.schemas import CreateEquipmentSchema
 
 
 router = APIRouter(prefix='/rooms', tags=['Залы'])
@@ -21,6 +26,14 @@ async def get_room(service: SERVICE_DEP, room_id: PositiveInt):
 @router.post('/', response_model=GetRoomSchema)
 async def create_room(service: SERVICE_DEP, room: CreateRoomSchema):
     return await service.create_room(room)
+
+
+@router.post('/add-equipments', response_model=None)
+async def add_equipments_to_room(
+        service: SERVICE_DEP,
+        equipments: AddEquipmentsToRoomSchema
+    ):
+    return await service.add_equipments_to_room(equipments)
 
 
 # @router.delete('/{room_id}', response_model=None)
