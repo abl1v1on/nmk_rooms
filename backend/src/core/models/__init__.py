@@ -5,6 +5,7 @@ __all__ = [
     'User',
     'Room',
     'Location',
+    'Equipment',
 ]
 
 from .base import Base
@@ -12,3 +13,4 @@ from .db_helper import SESSION_DEP, db_helper
 from .users import User
 from .rooms import Room
 from .locations import Location
+from .equipments import Equipment
