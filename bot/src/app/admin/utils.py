@@ -71,3 +71,8 @@ async def get_equipments() -> list[str]:
             f'{index + 1}. {equipment['name']}'
             for index, equipment in enumerate(equipments)
         ]
+
+
+async def add_equipments_to_room(data: dict) -> None:
+    async with get_client() as client:
+        await client.post(url='rooms/add-equipments', json=data)
