@@ -1,7 +1,11 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import String, CheckConstraint
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import Base
+
+if TYPE_CHECKING:
+    from . import Booking
 
 
 class User(Base):
@@ -17,6 +21,8 @@ class User(Base):
     last_name: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     tg_id: Mapped[int] = mapped_column(nullable=False)
+
+    booking: Mapped[list['Booking']] = relationship(back_populates='user')
 
     __table_args__ = (
         CheckConstraint(
