@@ -19,3 +19,7 @@ class CreateRoomForm(StatesGroup):
     description = State()
     image = State()
     location_id = State()
+
+
+class CreateEquipmentForm(StatesGroup):
+    name = State()
