@@ -80,49 +80,6 @@ export default function HallDetailsPage() {
                                 </div>
                             </div>
 
-                            <div className="datetime-picker">
-                                <div className="field is-expanded">
-                                    <label className="label">Время начала</label>
-                                    <div className="control">
-                                        <div className="select is-fullwidth">
-                                            <select id="start-time">
-                                                <option value="">Выберите время</option>
-                                                <option value="09:00">09:00</option>
-                                                <option value="10:00">10:00</option>
-                                                <option value="11:00">11:00</option>
-                                                <option value="12:00">12:00</option>
-                                                <option value="13:00">13:00</option>
-                                                <option value="14:00">14:00</option>
-                                                <option value="15:00">15:00</option>
-                                                <option value="16:00">16:00</option>
-                                                <option value="17:00">17:00</option>
-                                                <option value="18:00">18:00</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="field is-expanded">
-                                    <label className="label">Время окончания</label>
-                                    <div className="control">
-                                        <div className="select is-fullwidth">
-                                            <select id="end-time">
-                                                <option value="">Выберите время</option>
-                                                <option value="10:00">10:00</option>
-                                                <option value="11:00">11:00</option>
-                                                <option value="12:00">12:00</option>
-                                                <option value="13:00">13:00</option>
-                                                <option value="14:00">14:00</option>
-                                                <option value="15:00">15:00</option>
-                                                <option value="16:00">16:00</option>
-                                                <option value="17:00">17:00</option>
-                                                <option value="18:00">18:00</option>
-                                                <option value="19:00">19:00</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div className="field">
                                 <label className="label">Доступные слоты на 15.05.2023</label>
