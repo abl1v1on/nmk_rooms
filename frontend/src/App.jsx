@@ -19,7 +19,7 @@ export default function App() {
         <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/halls" element={<HallListPage />} />
-            <Route path="/halls/details" element={<HallDetailsPage />} />
+            <Route path="/halls/:id" element={<HallDetailsPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
