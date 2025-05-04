@@ -38,6 +38,6 @@ async def create_booking(service: SERVICE_DEP, booking: CreateBookingSchema):
     return await service.create_booking(booking)
 
 
-@router.delete('/{user_id}', response_model=None)
+@router.delete('/{booking_id}', response_model=None)
 async def delete_booking(service: SERVICE_DEP, booking_id: PositiveInt):
     return await service.delete_booking(booking_id)
