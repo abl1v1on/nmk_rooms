@@ -4,6 +4,7 @@ from annotated_types import Gt
 from datetime import date
 
 from core.models import BookingTimeEnum
+from api.rooms.schemas import GetRoomSchema
 
 
 class BaseBookingSchema(BaseModel):
@@ -15,6 +16,13 @@ class BaseBookingSchema(BaseModel):
 
 class GetBookingSchema(BaseBookingSchema):
     id: Annotated[int, Gt(0)]
+
+
+class GetBookingWithRoomSchema(BaseModel):
+    room: GetRoomSchema
+    user_id: Annotated[int, Gt(0)]
+    booking_date: date
+    booking_time: BookingTimeEnum
 
 
 class CreateBookingSchema(BaseBookingSchema):
