@@ -19,6 +19,7 @@ class GetBookingSchema(BaseBookingSchema):
 
 
 class GetBookingWithRoomSchema(BaseModel):
+    id: Annotated[int, Gt(0)]
     room: GetRoomSchema
     user_id: Annotated[int, Gt(0)]
     booking_date: date
