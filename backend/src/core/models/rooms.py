@@ -26,7 +26,8 @@ class Room(Base):
         secondary=rooms_equipments,
         back_populates='rooms'
     )
-    booking: Mapped[list['Booking']] = relationship(back_populates='room')
+
+    bookings: Mapped[list['Booking']] = relationship(back_populates='room')
 
     __table_args__ = (
         CheckConstraint('number >= 1', name='check_room_number_ge_1'),
