@@ -1,6 +1,7 @@
+import axios from "axios";
+import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import config from "../config.js";
 import Loader from "../components/Loader.jsx";
@@ -10,6 +11,9 @@ export default function HallDetailsPage() {
     const { id } = useParams();
     const [hall, setHall] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedBookingDate, setSelectedBookingDate] = useState(null);
+    const [availableSlots, setAvailableSlots] = useState([]);
+    const [selectedSlot, setSelectedSlot] = useState(null);
 
     useEffect(() => {
         const handleHall = async () => {
@@ -29,6 +33,50 @@ export default function HallDetailsPage() {
 
         handleHall();
     }, [id]);
+
+    const handleChangeBookingDate = async (e) => {
+        const bookingDate = e.target.value;
+        setSelectedBookingDate(bookingDate);
+
+        try {
+            const data = {
+                room_id: hall.id,
+                booking_date: bookingDate
+            }
+            const response = await axios.get(
+                `${config.baseUrl}/bookings/busy?room_id=${hall.id}&booking_date=${bookingDate}`,
+            )
+            setAvailableSlots(response.data);
+        } catch (error) {
+            console.log(error);
+            alert('Error');
+        }
+    }
+
+    const handleClickToSlot = (index) => {
+        setSelectedSlot(index);
+    }
+
+    const bookHall = async () => {
+        try {
+            const data = {
+                room_id: hall.id,
+                user_id: 1, // TODO: после добавления авторизации изменить user_id
+                booking_date: selectedBookingDate,
+                booking_time: selectedSlot
+            };
+            const response = await axios.post(
+                `${config.baseUrl}/bookings`, data
+            );
+
+            if (response.status === 200) {
+                toast.success("Вы успешно забронировали зал");
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("При попытке бронирования произошла ошибка");
+        }
+    }
 
     const renderPage = () => {
         if (isLoading) {
@@ -78,84 +126,74 @@ export default function HallDetailsPage() {
                         <div className="field">
                             <label className="label">Дата бронирования</label>
                             <div className="control">
-                                <input className="input" type="date" id="booking-date" />
+                                <input onChange={handleChangeBookingDate} className="input" type="date" id="booking-date" />
                             </div>
                         </div>
 
-
+                        {selectedBookingDate && (
                         <div className="field">
-                            <label className="label">Доступные слоты на 15.05.2023</label>
+                            <label className="label">Доступные слоты на {selectedBookingDate}</label>
                             <div className="time-slots">
-                                <div className="time-slot">09:00-10:00</div>
-                                <div className="time-slot booked">10:00-11:00</div>
-                                <div className="time-slot">11:00-12:00</div>
-                                <div className="time-slot selected">12:00-13:00</div>
-                                <div className="time-slot">13:00-14:00</div>
-                                <div className="time-slot">14:00-15:00</div>
-                                <div className="time-slot booked">15:00-16:00</div>
-                                <div className="time-slot">16:00-17:00</div>
-                                <div className="time-slot">17:00-18:00</div>
+                                {availableSlots.map((slot, index) => (
+                                    <div
+                                        onClick={() => handleClickToSlot(slot)}
+                                        className={`time-slot ${selectedSlot === slot ? 'selected' : ''}`}>
+                                        {slot}
+                                    </div>
+                                ))}
+                                {availableSlots.length === 0 && (
+                                    <div style={{color: "red"}}>На {selectedBookingDate} нет доступных слотов</div>
+                                )}
                             </div>
                         </div>
+                        )}
+
+                        {/*<div className="field">*/}
+                        {/*    <label className="label">Цель бронирования</label>*/}
+                        {/*    <div className="control">*/}
+                        {/*        <textarea className="textarea" placeholder="Опишите цель использования зала (совещание, презентация и т.д.)"></textarea>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
+
+                        {/*<div className="field">*/}
+                        {/*    <label className="label">Дополнительное оборудование</label>*/}
+                        {/*    <div className="equipment-checkboxes">*/}
+                        {/*        <label className="checkbox">*/}
+                        {/*            <input type="checkbox" />*/}
+                        {/*            Ноутбук*/}
+                        {/*        </label>*/}
+                        {/*        <label className="checkbox">*/}
+                        {/*            <input type="checkbox" />*/}
+                        {/*            Дополнительный микрофон*/}
+                        {/*        </label>*/}
+                        {/*        <label className="checkbox">*/}
+                        {/*            <input type="checkbox" />*/}
+                        {/*            Видеокамера*/}
+                        {/*        </label>*/}
+                        {/*        <label className="checkbox">*/}
+                        {/*            <input type="checkbox" />*/}
+                        {/*            Док-станция*/}
+                        {/*        </label>*/}
+                        {/*        <label className="checkbox">*/}
+                        {/*            <input type="checkbox" />*/}
+                        {/*            Флипчарт (дополнительный)*/}
+                        {/*        </label>*/}
+                        {/*        <label className="checkbox">*/}
+                        {/*            <input type="checkbox" />*/}
+                        {/*            Внешние колонки*/}
+                        {/*        </label>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
 
                         <div className="field">
-                            <label className="label">Цель бронирования</label>
                             <div className="control">
-                                <textarea className="textarea" placeholder="Опишите цель использования зала (совещание, презентация и т.д.)"></textarea>
-                            </div>
-                        </div>
-
-                        <div className="field">
-                            <label className="label">Дополнительное оборудование</label>
-                            <div className="equipment-checkboxes">
-                                <label className="checkbox">
-                                    <input type="checkbox" />
-                                    Ноутбук
-                                </label>
-                                <label className="checkbox">
-                                    <input type="checkbox" />
-                                    Дополнительный микрофон
-                                </label>
-                                <label className="checkbox">
-                                    <input type="checkbox" />
-                                    Видеокамера
-                                </label>
-                                <label className="checkbox">
-                                    <input type="checkbox" />
-                                    Док-станция
-                                </label>
-                                <label className="checkbox">
-                                    <input type="checkbox" />
-                                    Флипчарт (дополнительный)
-                                </label>
-                                <label className="checkbox">
-                                    <input type="checkbox" />
-                                    Внешние колонки
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className="field">
-                            <div className="control">
-                                <button className="button is-primary is-fullwidth is-medium">
+                                <button onClick={bookHall} className="button is-primary is-fullwidth is-medium">
                                     <span className="icon">
                                         <i className="fas fa-calendar-check"></i>
                                     </span>
                                     <span>Забронировать</span>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-
-                    <div className="box mt-5">
-                        <h3 className="title is-5">График занятости</h3>
-                        <div className="content">
-                            <p>Зал занят в следующие периоды:</p>
-                            <ul>
-                                <li>15.05.2023: 10:00-11:00</li>
-                                <li>15.05.2023: 15:00-16:00</li>
-                                <li>16.05.2023: 14:00-17:00</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
