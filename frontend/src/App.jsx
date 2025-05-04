@@ -1,5 +1,6 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
 
 // components
 import Header from "./components/Header.jsx";
@@ -25,6 +26,7 @@ export default function App() {
         </Routes>
         <Header />
         <Footer />
+        <ToastContainer />
     </>
   )
 }
