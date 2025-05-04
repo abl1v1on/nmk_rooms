@@ -22,7 +22,7 @@ class User(Base):
     password: Mapped[str] = mapped_column(nullable=False)
     tg_id: Mapped[int] = mapped_column(nullable=False)
 
-    booking: Mapped[list['Booking']] = relationship(back_populates='user')
+    bookings: Mapped[list['Booking']] = relationship(back_populates='user')
 
     __table_args__ = (
         CheckConstraint(
