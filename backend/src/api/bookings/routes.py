@@ -23,12 +23,21 @@ async def get_busy_bookings(
     return await service.get_busy_bookings(room_id, booking_date)
 
 
+@router.get('/user-bookings', response_model=list[GetBookingSchema])
+async def get_user_bookings(service: SERVICE_DEP, user_id: PositiveInt):
+    return await service.get_user_bookings(user_id)
+
+
 @router.get('/{booking_id}', response_model=GetBookingSchema | None)
 async def get_booking_by_id(service: SERVICE_DEP, booking_id: PositiveInt):
     return await service.get_booking(id=booking_id)
 
 
-
 @router.post('/', response_model=GetBookingSchema)
 async def create_booking(service: SERVICE_DEP, booking: CreateBookingSchema):
     return await service.create_booking(booking)
+
+
+@router.delete('/{user_id}', response_model=None)
+async def delete_booking(service: SERVICE_DEP, booking_id: PositiveInt):
+    return await service.delete_booking(booking_id)
