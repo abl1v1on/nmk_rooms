@@ -1,7 +1,8 @@
 from datetime import date
 from typing import Annotated
-from fastapi import Depends
+from fastapi import Depends, Response, status
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import exceptions
@@ -12,7 +13,8 @@ from api.users.service import UserAPIService
 from core.models import (
     Booking,
     SESSION_DEP,
-    BookingTimeEnum
+    BookingTimeEnum,
+    Room,
 )
 
 
@@ -68,6 +70,19 @@ class BookingAPIService(BaseAPIService[Booking]):
         bookings_time = [b_time.value for b_time in BookingTimeEnum]
 
         return [b_time for b_time in bookings_time if b_time not in busy_bookings]
+
+    async def get_user_bookings(self, user_id: int) -> list[Booking]:
+        query = select(Booking) \
+            .filter(Booking.user_id == user_id) \
+            .options(selectinload(Booking.room).selectinload(Room.location))
+        bookings = (await self.session.execute(query)).scalars().all()
+        return bookings
+
+    async def delete_booking(self, booking_id: int) -> Response:
+        deletable_booking = await self.get_booking(id=booking_id)
+        await self.session.delete(deletable_booking)
+        await self.session.commit()
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 def get_service(session: SESSION_DEP) -> BookingAPIService:

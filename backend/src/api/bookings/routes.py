@@ -3,7 +3,7 @@ from pydantic import PositiveInt
 from datetime import date
 
 from .service import SERVICE_DEP
-from .schemas import GetBookingSchema, CreateBookingSchema
+from .schemas import GetBookingSchema, CreateBookingSchema, GetBookingWithRoomSchema
 
 
 router = APIRouter(prefix='/bookings', tags=['Бронирования'])
@@ -23,7 +23,7 @@ async def get_busy_bookings(
     return await service.get_busy_bookings(room_id, booking_date)
 
 
-@router.get('/user-bookings', response_model=list[GetBookingSchema])
+@router.get('/user-bookings', response_model=list[GetBookingWithRoomSchema])
 async def get_user_bookings(service: SERVICE_DEP, user_id: PositiveInt):
     return await service.get_user_bookings(user_id)
 
