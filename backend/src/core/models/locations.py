@@ -14,7 +14,7 @@ class Location(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     address: Mapped[str] = mapped_column(String(255), unique=True)
 
-    rooms: Mapped[list['Room']] = relationship(back_populates='location')
+    rooms: Mapped[list['Room']] = relationship(back_populates='location', lazy='selectin')
 
     __table_args__ = (
         CheckConstraint(

@@ -21,7 +21,7 @@ class Room(Base):
         ForeignKey('locations.id', ondelete='CASCADE')
     )
 
-    location: Mapped['Location'] = relationship(back_populates='rooms')
+    location: Mapped['Location'] = relationship(back_populates='rooms', lazy='selectin')
     equipments: Mapped[list['Equipment']] = relationship(
         secondary=rooms_equipments,
         back_populates='rooms'
