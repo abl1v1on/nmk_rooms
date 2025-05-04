@@ -41,6 +41,13 @@ class BookingAPIService(BaseAPIService[Booking]):
         await room_service.get_room(id=booking.room_id)
         await user_service.get_user(id=booking.user_id)
 
+        if await self._is_exists(
+                room_id=booking.room_id,
+                booking_date=booking.booking_date,
+                booking_time=booking.booking_time
+            ):
+            raise exceptions.BookingAlreadyExistsException()
+
         new_booking = Booking(**booking.model_dump())
         self.session.add(new_booking)
         await self.session.commit()
