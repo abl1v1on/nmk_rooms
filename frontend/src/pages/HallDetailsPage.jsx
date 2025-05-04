@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import config from "../config.js";
@@ -14,6 +14,8 @@ export default function HallDetailsPage() {
     const [selectedBookingDate, setSelectedBookingDate] = useState(null);
     const [availableSlots, setAvailableSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleHall = async () => {
@@ -39,10 +41,6 @@ export default function HallDetailsPage() {
         setSelectedBookingDate(bookingDate);
 
         try {
-            const data = {
-                room_id: hall.id,
-                booking_date: bookingDate
-            }
             const response = await axios.get(
                 `${config.baseUrl}/bookings/busy?room_id=${hall.id}&booking_date=${bookingDate}`,
             )
@@ -71,6 +69,7 @@ export default function HallDetailsPage() {
 
             if (response.status === 200) {
                 toast.success("Вы успешно забронировали зал");
+                navigate("/my-bookings");
             }
         } catch (error) {
             console.log(error);
@@ -155,36 +154,7 @@ export default function HallDetailsPage() {
                         {/*    </div>*/}
                         {/*</div>*/}
 
-                        {/*<div className="field">*/}
-                        {/*    <label className="label">Дополнительное оборудование</label>*/}
-                        {/*    <div className="equipment-checkboxes">*/}
-                        {/*        <label className="checkbox">*/}
-                        {/*            <input type="checkbox" />*/}
-                        {/*            Ноутбук*/}
-                        {/*        </label>*/}
-                        {/*        <label className="checkbox">*/}
-                        {/*            <input type="checkbox" />*/}
-                        {/*            Дополнительный микрофон*/}
-                        {/*        </label>*/}
-                        {/*        <label className="checkbox">*/}
-                        {/*            <input type="checkbox" />*/}
-                        {/*            Видеокамера*/}
-                        {/*        </label>*/}
-                        {/*        <label className="checkbox">*/}
-                        {/*            <input type="checkbox" />*/}
-                        {/*            Док-станция*/}
-                        {/*        </label>*/}
-                        {/*        <label className="checkbox">*/}
-                        {/*            <input type="checkbox" />*/}
-                        {/*            Флипчарт (дополнительный)*/}
-                        {/*        </label>*/}
-                        {/*        <label className="checkbox">*/}
-                        {/*            <input type="checkbox" />*/}
-                        {/*            Внешние колонки*/}
-                        {/*        </label>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-
+                        {selectedSlot && (
                         <div className="field">
                             <div className="control">
                                 <button onClick={bookHall} className="button is-primary is-fullwidth is-medium">
@@ -195,6 +165,7 @@ export default function HallDetailsPage() {
                                 </button>
                             </div>
                         </div>
+                        )}
                     </div>
                 </div>
             </div>
