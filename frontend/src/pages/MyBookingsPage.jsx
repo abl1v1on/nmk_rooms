@@ -1,4 +1,79 @@
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+import config from "../config.js";
+import SingleBooking from "../components/SingleBooking.jsx";
+import Loader from "../components/Loader.jsx";
+
+
 export default function MyBookingsPage() {
+    const [bookings, setBookings] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchBookings = async () => {
+            try {
+                const response = await axios.get(
+                    `${config.baseUrl}/bookings/user-bookings?user_id=1`
+                );
+                setBookings(response.data);
+            } catch (error) {
+                console.log(error);
+                alert("Error");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchBookings();
+    }, []);
+
+    const handleDeleteBooking = async (id) => {
+        try {
+            const response = await axios.delete(
+                `${config.baseUrl}/bookings/${id}`
+            );
+            toast.success("Бронирование отменено");
+            setBookings(bookings.filter((booking) => booking.id !== id));
+        } catch (error) {
+            console.log(error);
+            alert("Error");
+        }
+    }
+
+    const renderBookings = () => {
+        if (bookings.length > 0) {
+            return (
+                <div className="bookings-list">
+                    {bookings.map((booking) => (
+                    <SingleBooking
+                        booking={booking}
+                        handleDeleteBooking={handleDeleteBooking}
+                    />
+                    ))}
+                </div>
+            )
+        } else {
+            return (
+                <div className="no-bookings">
+                    <span className="icon is-large has-text-grey-light mb-4">
+                        <i className="fas fa-calendar-times fa-3x"></i>
+                    </span>
+                    <h3 className="title is-4 has-text-grey">Нет активных бронирований</h3>
+                    <p className="subtitle is-6 has-text-grey">У вас пока нет предстоящих бронирований конференц-залов</p>
+                    <Link to="/halls" className="button is-primary mt-3">
+                        <span className="icon">
+                            <i className="fas fa-plus"></i>
+                        </span>
+                        <span>Забронировать зал</span>
+                    </Link>
+                </div>
+            )
+        }
+    }
+
     return (
     <section className="section">
         <div className="container">
@@ -14,12 +89,12 @@ export default function MyBookingsPage() {
                     <h1 className="title is-2">Мои бронирования</h1>
                 </div>
                 <div className="column is-narrow">
-                    <button className="button is-primary">
+                    <Link to="/halls" className="button is-primary">
                         <span className="icon">
                             <i className="fas fa-plus"></i>
                         </span>
                         <span>Новое бронирование</span>
-                    </button>
+                    </Link>
                 </div>
             </div>
 
@@ -34,155 +109,8 @@ export default function MyBookingsPage() {
                 </div>
             </div>
 
-            <div className="bookings-list">
-                <div className="booking-card">
-                    <div className="booking-card-header">
-                        <div className="columns is-vcentered is-mobile">
-                            <div className="column">
-                                <h3 className="title is-4 mb-0">Конференц-зал "Нефтяник"</h3>
-                                <span className="booking-status status-confirmed">
-                                    <span className="icon is-small">
-                                        <i className="fas fa-check-circle"></i>
-                                    </span>
-                                    <span>Подтверждено</span>
-                                </span>
-                            </div>
-                            <div className="column is-narrow">
-                                <button className="button is-light is-danger cancel-btn">
-                                    <span className="icon">
-                                        <i className="fas fa-times"></i>
-                                    </span>
-                                    <span>Отменить</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="booking-card-body">
-                        <div className="booking-details">
-                            <div className="booking-detail">
-                                <div className="detail-label">Дата и время</div>
-                                <div className="detail-value">15 мая 2023, 14:00 - 16:00</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Местоположение</div>
-                                <div className="detail-value">Корпус А, 3 этаж, каб. 301</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Цель</div>
-                                <div className="detail-value">Совещание по проекту "Северный поток"</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Номер брони</div>
-                                <div className="detail-value">NMK-20230515-142</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="booking-card">
-                    <div className="booking-card-header">
-                        <div className="columns is-vcentered is-mobile">
-                            <div className="column">
-                                <h3 className="title is-4 mb-0">Переговорная "Бурение"</h3>
-                                <span className="booking-status status-confirmed">
-                                    <span className="icon is-small">
-                                        <i className="fas fa-check-circle"></i>
-                                    </span>
-                                    <span>Подтверждено</span>
-                                </span>
-                            </div>
-                            <div className="column is-narrow">
-                                <button className="button is-light is-danger cancel-btn">
-                                    <span className="icon">
-                                        <i className="fas fa-times"></i>
-                                    </span>
-                                    <span>Отменить</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="booking-card-body">
-                        <div className="booking-details">
-                            <div className="booking-detail">
-                                <div className="detail-label">Дата и время</div>
-                                <div className="detail-value">16 мая 2023, 09:00 - 11:00</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Местоположение</div>
-                                <div className="detail-value">Корпус Б, 2 этаж, каб. 215</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Цель</div>
-                                <div className="detail-value">Обсуждение ТЗ с заказчиком</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Номер брони</div>
-                                <div className="detail-value">NMK-20230516-087</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="booking-card">
-                    <div className="booking-card-header">
-                        <div className="columns is-vcentered is-mobile">
-                            <div className="column">
-                                <h3 className="title is-4 mb-0">Зал заседаний</h3>
-                                <span className="booking-status status-cancelled">
-                                    <span className="icon is-small">
-                                        <i className="fas fa-times-circle"></i>
-                                    </span>
-                                    <span>Отменено</span>
-                                </span>
-                            </div>
-                            <div className="column is-narrow">
-                                <button className="button is-light is-danger" disabled>
-                                    <span className="icon">
-                                        <i className="fas fa-times"></i>
-                                    </span>
-                                    <span>Отменить</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="booking-card-body">
-                        <div className="booking-details">
-                            <div className="booking-detail">
-                                <div className="detail-label">Дата и время</div>
-                                <div className="detail-value">10 мая 2023, 13:00 - 15:00</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Местоположение</div>
-                                <div className="detail-value">Корпус В, 1 этаж, каб. 101</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Цель</div>
-                                <div className="detail-value">Презентация годового отчета</div>
-                            </div>
-                            <div className="booking-detail">
-                                <div className="detail-label">Номер брони</div>
-                                <div className="detail-value">NMK-20230510-056</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/*<div className="no-bookings">*/}
-            {/*    <span className="icon is-large has-text-grey-light mb-4">*/}
-            {/*        <i className="fas fa-calendar-times fa-3x"></i>*/}
-            {/*    </span>*/}
-            {/*    <h3 className="title is-4 has-text-grey">Нет активных бронирований</h3>*/}
-            {/*    <p className="subtitle is-6 has-text-grey">У вас пока нет предстоящих бронирований конференц-залов</p>*/}
-            {/*    <button className="button is-primary mt-3">*/}
-            {/*        <span className="icon">*/}
-            {/*            <i className="fas fa-plus"></i>*/}
-            {/*        </span>*/}
-            {/*        <span>Забронировать зал</span>*/}
-            {/*    </button>*/}
-            {/*</div>*/}
+            {isLoading ? <Loader /> : renderBookings()}
         </div>
     </section>
-
     );
 }
