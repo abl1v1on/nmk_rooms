@@ -45,7 +45,7 @@ export default function SingleBooking({ booking, handleDeleteBooking }) {
                     </div>
                     <div className="booking-detail">
                         <div className="detail-label">Цель</div>
-                        <div className="detail-value">Совещание по проекту "Северный поток"</div>
+                        <div className="detail-value">{booking.goal ? booking.goal : "-"}</div>
                     </div>
                 </div>
             </div>
