@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from datetime import date
 from enum import Enum as PyEnum
-from sqlalchemy import ForeignKey, Enum as SQLAEnum
+from sqlalchemy import ForeignKey, String, Enum as SQLAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import Base
@@ -31,6 +31,11 @@ class Booking(Base):
     )
     user_id: Mapped[int] = mapped_column(
         ForeignKey('users.id', ondelete='CASCADE')
+    )
+    goal: Mapped[str | None] = mapped_column(
+        String(100),
+        default=None,
+        nullable=True
     )
     booking_date: Mapped[date] = mapped_column(nullable=False)
     booking_time: Mapped[BookingTimeEnum] = mapped_column(
