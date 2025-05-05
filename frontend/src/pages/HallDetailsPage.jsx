@@ -13,6 +13,7 @@ export default function HallDetailsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedBookingDate, setSelectedBookingDate] = useState(null);
     const [availableSlots, setAvailableSlots] = useState([]);
+    const [bookingGoal, setBookingGoal] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
 
     const navigate = useNavigate();
@@ -60,6 +61,7 @@ export default function HallDetailsPage() {
             const data = {
                 room_id: hall.id,
                 user_id: 1, // TODO: после добавления авторизации изменить user_id
+                goal: bookingGoal,
                 booking_date: selectedBookingDate,
                 booking_time: selectedSlot
             };
@@ -147,12 +149,18 @@ export default function HallDetailsPage() {
                         </div>
                         )}
 
-                        {/*<div className="field">*/}
-                        {/*    <label className="label">Цель бронирования</label>*/}
-                        {/*    <div className="control">*/}
-                        {/*        <textarea className="textarea" placeholder="Опишите цель использования зала (совещание, презентация и т.д.)"></textarea>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
+                        {selectedSlot && (
+                        <div className="field">
+                            <label className="label">Цель бронирования</label>
+                            <div className="control">
+                                <textarea
+                                    onChange={(e) => setBookingGoal(e.target.value)}
+                                    className="textarea"
+                                    placeholder="Опишите цель использования зала (совещание, презентация и т.д.)">
+                                </textarea>
+                            </div>
+                        </div>
+                        )}
 
                         {selectedSlot && (
                         <div className="field">
