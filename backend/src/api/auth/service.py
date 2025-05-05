@@ -1,7 +1,8 @@
 import jwt
 import bcrypt
 from typing import Annotated
-from fastapi import Depends
+from datetime import datetime, timedelta, timezone
+from fastapi import Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -25,10 +26,7 @@ class AuthAPIService:
         if not user or not self.__verify_password(credentials.password, user.password):
             raise InvalidCredentialsException()
 
-        payload = {
-            'sub': user.id,
-            'email': user.email
-        }
+        payload = self.__generate_payload(user)
         token = self.encode_jwt(payload)
         return AccessTokenSchema(token=token)
 
@@ -41,12 +39,23 @@ class AuthAPIService:
         return token
 
     def decode_jwt(self, token: str | bytes) -> dict:
-        data = jwt.decode(
-            jwt=token,
-            key=self.public_key,
-            algorithms=[self.algorithm]
-        )
-        return data
+        try:
+            data = jwt.decode(
+                jwt=token,
+                key=self.public_key,
+                algorithms=[self.algorithm]
+            )
+            return data
+        except jwt.exceptions.ExpiredSignatureError:
+            raise HTTPException(
+                detail='Token has expired',
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        except jwt.exceptions.DecodeError:
+            raise HTTPException(
+                detail='Decode error',
+                status_code=status.HTTP_403_FORBIDDEN
+            )
 
     @staticmethod
     def __verify_password(pwd: str, hashed_pwd: bytes) -> bool:
@@ -54,6 +63,22 @@ class AuthAPIService:
             pwd.encode(),
             hashed_pwd
         )
+
+    def __generate_payload(self, user: User) -> dict:
+        now = datetime.now(tz=timezone.utc)
+        exp = self.__get_expire(now)
+        payload = {
+            'sub': str(user.id),
+            'email': user.email,
+            'iat': now,
+            'exp': exp
+        }
+        return payload
+
+    @staticmethod
+    def __get_expire(now: datetime):
+        offset = timedelta(minutes=settings.auth_jwt.access_token_expire_minutes)
+        return now + offset
 
 
 def get_service(session: SESSION_DEP) -> AuthAPIService:
