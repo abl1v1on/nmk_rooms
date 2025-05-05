@@ -1,4 +1,5 @@
 from typing import Annotated
+from datetime import datetime
 from annotated_types import MaxLen, MinLen
 from string import ascii_letters, digits
 from pydantic import BaseModel, EmailStr, field_validator
@@ -53,3 +54,10 @@ class AuthUserSchema(BaseModel):
 
 class AccessTokenSchema(BaseModel):
     token: str
+
+
+class TokenPayload(BaseModel):
+    sub: str
+    email: EmailStr
+    iat: datetime
+    exp: datetime
