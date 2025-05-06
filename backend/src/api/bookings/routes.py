@@ -1,9 +1,14 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import PositiveInt
 from datetime import date
 
 from .service import SERVICE_DEP
-from .schemas import GetBookingSchema, CreateBookingSchema, GetBookingWithRoomSchema
+from .schemas import (
+    GetBookingSchema,
+    CreateBookingSchema,
+    GetBookingWithRoomSchema
+)
+from api.auth.routes import AUTH_TOKEN_DEP
 
 
 router = APIRouter(prefix='/bookings', tags=['Бронирования'])
@@ -24,8 +29,8 @@ async def get_busy_bookings(
 
 
 @router.get('/user-bookings', response_model=list[GetBookingWithRoomSchema])
-async def get_user_bookings(service: SERVICE_DEP, user_id: PositiveInt):
-    return await service.get_user_bookings(user_id)
+async def get_user_bookings(service: SERVICE_DEP, token: AUTH_TOKEN_DEP):
+    return await service.get_user_bookings(int(token.sub))
 
 
 @router.get('/{booking_id}', response_model=GetBookingSchema | None)
