@@ -1,8 +1,11 @@
-from fastapi import APIRouter
-
+from fastapi import APIRouter, Depends
 from pydantic import PositiveInt
+
 from .service import SERVICE_DEP
 from .schemas import GetUserSchema, CreateUserSchema
+from core.models import User
+from api.auth.routes import CURRENT_USER_DEP
+
 
 router = APIRouter(prefix='/users', tags=['Пользователи'])
 
@@ -10,6 +13,11 @@ router = APIRouter(prefix='/users', tags=['Пользователи'])
 @router.get('/', response_model=list[GetUserSchema])
 async def get_users(service: SERVICE_DEP):
     return await service.get_users()
+
+
+@router.get('/me', response_model=GetUserSchema | None)
+async def get_me(user: CURRENT_USER_DEP):
+    return user
 
 
 @router.get('/{user_id}', response_model=GetUserSchema | None)
