@@ -1,4 +1,37 @@
+import * as yup from 'yup';
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import config from "../config.js";
+
+
 export default function LoginPage() {
+    const [formErrors, setFormErrors] = useState(null);
+
+    const schema = yup.object().shape({
+      email: yup.string().email('Некорректный email').required('Email обязателен'),
+      password: yup.string().min(8, 'Минимум 8 символов').required('Пароль обязателен'),
+    });
+
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema),
+    });
+
+    const onSubmit = async (data) => {
+        setFormErrors(null);
+
+        try {
+            const response = await axios.post(
+                `${config.baseUrl}/auth/login`, data
+            );
+            alert(response.data.token);
+        } catch (error) {
+            setFormErrors("Неправильный логин или пароль");
+        }
+    };
+
     return (
         <div className="auth-container">
             <div className="auth-card">
@@ -13,11 +46,15 @@ export default function LoginPage() {
                 <div className="auth-body">
                     <h2 className="auth-title title is-3 has-text-centered">Вход в систему</h2>
 
-                    <form id="loginForm">
+                    <form id="loginForm" method="post" onSubmit={handleSubmit(onSubmit)}>
+                        {formErrors && (
+                            <p style={{color: "red"}} className="mb-5">{formErrors}</p>
+                        )}
                         <div className="field">
                             <label className="label">Корпоративная почта</label>
                             <div className="control has-icons-left">
-                                <input className="input input-auth" type="email" placeholder="user@nmk.ru" required/>
+                                <input {...register('email')} className="input input-auth" type="email" placeholder="user@nmk.ru" required/>
+                                {errors.email && <p style={{ color: 'red' }}>{errors.email.message}</p>}
                                 <span className="icon is-small is-left">
                                 <i className="fas fa-envelope"></i>
                             </span>
@@ -27,7 +64,8 @@ export default function LoginPage() {
                         <div className="field">
                             <label className="label">Пароль</label>
                             <div className="control has-icons-left">
-                                <input className="input input-auth" type="password" placeholder="••••••••" required/>
+                                <input {...register('password')} className="input input-auth" type="password" placeholder="••••••••" required/>
+                                {errors.password && <p style={{ color: 'red' }}>{errors.password.message}</p>}
                                 <span className="icon is-small is-left">
                                 <i className="fas fa-lock"></i>
                             </span>
