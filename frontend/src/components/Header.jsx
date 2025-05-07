@@ -32,11 +32,6 @@ export default function Header() {
                     <div className="navbar-end">
                         <Link className="navbar-item is-active" to="/halls" onClick={handleLinkClick}>Все залы</Link>
                         <Link className="navbar-item" to="/my-bookings" onClick={handleLinkClick}>Мои бронирования</Link>
-                        <div className="navbar-item">
-                            <div className="buttons">
-                                <Link className="button is-primary" to="/login" onClick={handleLinkClick}>Войти</Link>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
