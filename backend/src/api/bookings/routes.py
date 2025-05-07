@@ -29,8 +29,8 @@ async def get_busy_bookings(
 
 
 @router.get('/user-bookings', response_model=list[GetBookingWithRoomSchema])
-async def get_user_bookings(service: SERVICE_DEP, token: AUTH_TOKEN_DEP):
-    return await service.get_user_bookings(int(token.sub))
+async def get_user_bookings(service: SERVICE_DEP, user_id: PositiveInt):
+    return await service.get_user_bookings(user_id)
 
 
 @router.get('/{booking_id}', response_model=GetBookingSchema | None)
