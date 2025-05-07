@@ -60,7 +60,7 @@ export default function HallDetailsPage() {
         try {
             const data = {
                 room_id: hall.id,
-                user_id: 1, // TODO: после добавления авторизации изменить user_id
+                user_id: Number(localStorage.getItem("userId")),
                 goal: bookingGoal,
                 booking_date: selectedBookingDate,
                 booking_time: selectedSlot

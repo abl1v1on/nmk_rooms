@@ -15,8 +15,9 @@ export default function MyBookingsPage() {
     useEffect(() => {
         const fetchBookings = async () => {
             try {
+                const userId = localStorage.getItem("userId");
                 const response = await axios.get(
-                    `${config.baseUrl}/bookings/user-bookings?user_id=1`
+                    `${config.baseUrl}/bookings/user-bookings?user_id=${userId}`
                 );
                 setBookings(response.data);
             } catch (error) {
