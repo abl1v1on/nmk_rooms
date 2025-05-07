@@ -1,3 +1,4 @@
+import uuid
 from fastapi import APIRouter, Depends
 from pydantic import PositiveInt
 
@@ -18,6 +19,18 @@ async def get_users(service: SERVICE_DEP):
 @router.get('/me', response_model=GetUserSchema | None)
 async def get_me(user: CURRENT_USER_DEP):
     return user
+
+
+@router.get('/token')
+async def get_user_token_by_tg_id(service: SERVICE_DEP, tg_id: PositiveInt) -> dict:
+    user = await service.get_user(tg_id=tg_id)
+    return {'token': user.token}
+
+
+@router.get('/by-token/{token}')
+async def get_user_by_token(service: SERVICE_DEP, token: str) -> dict:
+    user = await service.get_user(token=token)
+    return {'user_id': user.id}
 
 
 @router.get('/{user_id}', response_model=GetUserSchema | None)
