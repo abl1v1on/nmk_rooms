@@ -1,3 +1,4 @@
+import uuid
 from typing import TYPE_CHECKING
 from sqlalchemy import String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -21,6 +22,12 @@ class User(Base):
     last_name: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     tg_id: Mapped[int] = mapped_column(nullable=False)
+    token: Mapped[str] = mapped_column(
+        nullable=False,
+        unique=True,
+        index=True,
+        default=lambda: str(uuid.uuid4())
+    )
 
     bookings: Mapped[list['Booking']] = relationship(back_populates='user')
 
