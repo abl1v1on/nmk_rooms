@@ -7,7 +7,7 @@ import config from "../config.js";
 import Loader from "../components/Loader.jsx";
 
 
-export default function HallDetailsPage() {
+export default function HallDetailsPage({ userId }) {
     const { id } = useParams();
     const [hall, setHall] = useState({});
     const [isLoading, setIsLoading] = useState(true);
@@ -60,7 +60,7 @@ export default function HallDetailsPage() {
         try {
             const data = {
                 room_id: hall.id,
-                user_id: Number(localStorage.getItem("userId")),
+                user_id: Number(userId),
                 goal: bookingGoal,
                 booking_date: selectedBookingDate,
                 booking_time: selectedSlot

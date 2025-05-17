@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from core import settings
 from api import main_api_router
 
+# cloudflared tunnel --url http://localhost:8000
 
 def get_app() -> FastAPI:
     fastapi_app = FastAPI(

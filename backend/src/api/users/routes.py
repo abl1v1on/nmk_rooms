@@ -24,7 +24,7 @@ async def get_me(user: CURRENT_USER_DEP):
 @router.get('/token')
 async def get_user_token_by_tg_id(service: SERVICE_DEP, tg_id: PositiveInt) -> dict:
     user = await service.get_user(tg_id=tg_id)
-    return {'token': user.token}
+    return {'user_id': user.id}
 
 
 @router.get('/by-token/{token}')

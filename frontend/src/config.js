@@ -1,5 +1,5 @@
 const config = {
-    baseUrl: "http://localhost:8000/api/v1"
+    baseUrl: "https://nr-fx-mr-oman.trycloudflare.com/api/v1"
 }
 
 export default config;

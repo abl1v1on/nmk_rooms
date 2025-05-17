@@ -8,14 +8,13 @@ import SingleBooking from "../components/SingleBooking.jsx";
 import Loader from "../components/Loader.jsx";
 
 
-export default function MyBookingsPage() {
+export default function MyBookingsPage({ userId }) {
     const [bookings, setBookings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const userId = localStorage.getItem("userId");
                 const response = await axios.get(
                     `${config.baseUrl}/bookings/user-bookings?user_id=${userId}`
                 );

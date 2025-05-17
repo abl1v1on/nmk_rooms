@@ -1,6 +1,12 @@
 from aiogram import Router
-from aiogram.types import Message
+from aiogram.types import (
+    Message,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    WebAppInfo
+)
 from aiogram.filters import CommandStart
+from aiogram.enums.parse_mode import ParseMode
 
 from .admin import admin_router
 from .admin.utils import get_client
@@ -22,11 +28,16 @@ async def get_user_token(tg_id: int) -> None:
 
 @main_router.message(CommandStart(), is_admin)
 async def handle_start_cmd(message: Message) -> None:
-    user_token = await get_user_token(message.from_user.id)
+    url = f"https://4525-77-238-239-82.ngrok-free.app/"
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text='🔗 Перейти на сайт',
+                    web_app=WebAppInfo(url=url)
+                )
+            ]
+        ]
+    )
 
-    if user_token is None:
-        await message.answer('Доступ запрещен')
-        return
-
-    url = f'http://localhost:5173/token/{user_token}'
-    await message.answer(url)
+    await message.answer('test', reply_markup=kb)
