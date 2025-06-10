@@ -28,7 +28,7 @@ async def get_user_token(tg_id: int) -> None:
 
 @main_router.message(CommandStart(), is_admin)
 async def handle_start_cmd(message: Message) -> None:
-    url = f"https://4525-77-238-239-82.ngrok-free.app/"
+    url = f"https://50f8-77-238-239-82.ngrok-free.app"
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -40,4 +40,4 @@ async def handle_start_cmd(message: Message) -> None:
         ]
     )
 
-    await message.answer('test', reply_markup=kb)
+    await message.answer('👋 Здравствуйте! Для перехода в систему бронирования нажмите на ссылку ниже', reply_markup=kb)

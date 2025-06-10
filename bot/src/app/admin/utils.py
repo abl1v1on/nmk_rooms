@@ -22,10 +22,10 @@ async def get_users() -> list[str]:
         response = await client.get(url='users/')
         users = response.json()
         pattern = (
-            lambda index, user:
-            f'{index + 1}. {user['first_name']} {user['last_name']} - {user['email']}'
+            lambda user:
+            f'{user['id']}. {user['first_name']} {user['last_name']} - {user['email']}'
         )
-        return [pattern(index, user) for index, user in enumerate(users)]
+        return [pattern(user) for user in users]
 
 
 async def create_location(location: dict) -> None:
@@ -76,3 +76,15 @@ async def get_equipments() -> list[str]:
 async def add_equipments_to_room(data: dict) -> None:
     async with get_client() as client:
         await client.post(url='rooms/add-equipments', json=data)
+
+
+async def get_user_bookings(user_id: int) -> None:
+    async with get_client() as client:
+        response = await client.get(
+            url=f'bookings/user-bookings?user_id={user_id}'
+        )
+        bookings = response.json()
+        return [
+            f'ID: {booking['id']}\nНомер зала: {booking['room']['number']}\nЦель бронирования: {booking['goal']}\nДата бронирования: {booking['booking_date']}\nВремя бронирования: {booking['booking_time']}' 
+            for booking in bookings
+        ]

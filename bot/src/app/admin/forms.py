@@ -28,3 +28,7 @@ class CreateEquipmentForm(StatesGroup):
 class AddEquipmentsToRoomForm(StatesGroup):
     room_id = State()
     equipments = State()
+
+
+class GetUserBookings(StatesGroup):
+    user_id = State()

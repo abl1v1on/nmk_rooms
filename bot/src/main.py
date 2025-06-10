@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from aiogram import Bot, Dispatcher
 
 from config import settings
@@ -11,6 +12,7 @@ dp.include_router(main_router)
 
 
 async def main() -> None:
+    logging.basicConfig(level=logging.INFO)
     await dp.start_polling(bot)
 
 

@@ -21,35 +21,35 @@ import Loader from "./components/Loader.jsx";
 
 export default function App() {
     const [userId, setUserId] = useState(null);
+    const [isTWA, setIsTWA] = useState(true);
 
     useEffect(() => {
         const fetchUserId = async () => {
-            const isTWA = typeof window.Telegram !== "undefined" &&
-              typeof window.Telegram.WebApp !== "undefined";
-
-            if (!isTWA) {
-                return <Loader/>
-            }
-
-
             const tg = window.Telegram.WebApp;
-
             tg.ready();
+
+            if (typeof window.Telegram.WebApp.initDataUnsafe?.user?.id === "undefined") {
+              setIsTWA(false);
+            }
 
             const initData = tg.initData;
             const initDataUnsafe = tg.initDataUnsafe;
 
-            if (initDataUnsafe?.user?.id) {
-                const response = await axios.get(
-                    `${config.baseUrl}/users/token?tg_id=${initDataUnsafe.user.id}`
-                );
-                alert(response.data.user_id);
-                setUserId(response.data.user_id);
-            }
+            const response = await axios.get(
+                `${config.baseUrl}/users/token?tg_id=${initDataUnsafe.user.id}`
+            );
+            setUserId(response.data.user_id);
         }
 
         fetchUserId();
     }, []);
+
+    if (!isTWA) {
+        return <div
+            style={{textAlign: "center", fontSize: "24px"}}>
+            ⚠️ Доступ только через Telegram
+        </div>;
+    }
 
   return (
     <>

@@ -41,6 +41,7 @@ class Booking(Base):
     booking_time: Mapped[BookingTimeEnum] = mapped_column(
         SQLAEnum(BookingTimeEnum), nullable=False
     )
+    is_notified: Mapped[bool] = mapped_column(default=False, nullable=True)
 
     room: Mapped['Room'] = relationship(back_populates='bookings')
     user: Mapped['User'] = relationship(back_populates='bookings')

@@ -13,7 +13,8 @@ from .forms import (
     CreateLocationForm,
     CreateRoomForm,
     CreateEquipmentForm,
-    AddEquipmentsToRoomForm
+    AddEquipmentsToRoomForm,
+    GetUserBookings
 )
 
 
@@ -200,6 +201,40 @@ async def set_user_password_state(message: Message, state: FSMContext) -> None:
 @router.message(F.text == '👥 Список пользователей 👥', is_admin)
 async def handle_users_list_cmd(message: Message) -> None:
     await message.answer('\n'.join(await utils.get_users()))
+
+
+@router.message(F.text == '🏠 Забронированые залы пользователя 🏠', is_admin)
+async def handle_user_bookings_cmd(message: Message, state: FSMContext) -> None:
+    await message.answer('Введите ID пользователя')
+    await state.set_state(GetUserBookings.user_id)
+
+
+@router.message(GetUserBookings.user_id)
+async def set_user_id_state(message: Message, state: FSMContext) -> None:
+    user_id = message.text
+
+    if not user_id.isdigit():
+        await message.answer('Введите ID пользователя')
+        return
+
+    if int(user_id) <= 0:
+        await message.answer(
+            'ID пользователя не может быть меньше или равен нулю, введите валидное значение'
+        )
+        return
+
+    await state.update_data(user_id=int(user_id))
+    state_data = await state.get_data()
+
+    try:
+        bookings = await utils.get_user_bookings(state_data['user_id'])
+        await message.answer(f'\n\n{'=' * 40}\n\n'.join(bookings))
+    except:
+        await message.answer(
+            'При попытке отправки запроса произошла ошибка. Убедитесь, что пользвоатель с таким ID существует'
+        )
+    finally:
+        await state.clear()
 
 
 @router.message(F.text == '🗺 Добавить локацию 🗺', is_admin)

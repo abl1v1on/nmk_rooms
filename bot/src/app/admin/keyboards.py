@@ -26,6 +26,9 @@ admin_users_kb = ReplyKeyboardMarkup(
             KeyboardButton(text='👥 Список пользователей 👥')
         ],
         [
+            KeyboardButton(text='🏠 Забронированые залы пользователя 🏠')
+        ],
+        [
             KeyboardButton(text='⬅️ Назад ⬅️')
         ]
     ], resize_keyboard=True, one_time_keyboard=True
