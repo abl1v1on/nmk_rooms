@@ -14,7 +14,10 @@ admin_kb = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(text='💻 Оборудование 💻')
-        ]
+        ],
+        [
+            KeyboardButton(text='⌛️ Бронирования ⌛️')
+        ],
     ], resize_keyboard=True, one_time_keyboard=True
 )
 
@@ -72,6 +75,14 @@ admin_equipments_kb = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(text='⬅️ Назад ⬅️')
+        ]
+    ], resize_keyboard=True, one_time_keyboard=True
+)
+
+admin_bookings_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='⌛️ Удалить бронирование ⌛️')
         ]
     ], resize_keyboard=True, one_time_keyboard=True
 )

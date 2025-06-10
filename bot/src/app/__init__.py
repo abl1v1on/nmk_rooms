@@ -6,7 +6,6 @@ from aiogram.types import (
     WebAppInfo
 )
 from aiogram.filters import CommandStart
-from aiogram.enums.parse_mode import ParseMode
 
 from .admin import admin_router
 from .admin.utils import get_client
@@ -40,4 +39,7 @@ async def handle_start_cmd(message: Message) -> None:
         ]
     )
 
-    await message.answer('👋 Здравствуйте! Для перехода в систему бронирования нажмите на ссылку ниже', reply_markup=kb)
+    await message.answer(
+        '👋 Здравствуйте! Для перехода в систему бронирования нажмите на ссылку ниже',
+        reply_markup=kb
+    )

@@ -32,3 +32,7 @@ class AddEquipmentsToRoomForm(StatesGroup):
 
 class GetUserBookings(StatesGroup):
     user_id = State()
+
+
+class DeleteBookingForm(StatesGroup):
+    booking_id = State()

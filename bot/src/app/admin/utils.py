@@ -78,7 +78,7 @@ async def add_equipments_to_room(data: dict) -> None:
         await client.post(url='rooms/add-equipments', json=data)
 
 
-async def get_user_bookings(user_id: int) -> None:
+async def get_user_bookings(user_id: int) -> list[str]:
     async with get_client() as client:
         response = await client.get(
             url=f'bookings/user-bookings?user_id={user_id}'
@@ -88,3 +88,11 @@ async def get_user_bookings(user_id: int) -> None:
             f'ID: {booking['id']}\nНомер зала: {booking['room']['number']}\nЦель бронирования: {booking['goal']}\nДата бронирования: {booking['booking_date']}\nВремя бронирования: {booking['booking_time']}' 
             for booking in bookings
         ]
+
+
+async def delete_booking(booking_id: int) -> None:
+    async with get_client() as client:
+        response = await client.delete(url=f'bookings/{booking_id}')
+
+        if response.status_code == 404:
+            raise

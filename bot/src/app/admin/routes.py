@@ -14,7 +14,8 @@ from .forms import (
     CreateRoomForm,
     CreateEquipmentForm,
     AddEquipmentsToRoomForm,
-    GetUserBookings
+    GetUserBookings,
+    DeleteBookingForm
 )
 
 
@@ -468,3 +469,43 @@ async def set_equipment_name_state(message: Message, state: FSMContext) -> None:
 @router.message(F.text == '💻 Список оборудования 💻', is_admin)
 async def handle_equipments_list_cmd(message: Message) -> None:
     await message.answer('\n'.join(await utils.get_equipments()))
+
+
+@router.message(F.text == '⌛️ Бронирования ⌛️', is_admin)
+async def handle_bookings_admin_cmd(message: Message) -> None:
+    await message.answer(
+        'Выберите действие',
+        reply_markup=keyboards.admin_bookings_kb
+    )
+
+
+@router.message(F.text == '⌛️ Удалить бронирование ⌛️', is_admin)
+async def handle_delete_booking_cmd(message: Message, state: FSMContext) -> None:
+    await message.answer('Введите ID бронирования')
+    await state.set_state(DeleteBookingForm.booking_id)
+
+
+@router.message(DeleteBookingForm.booking_id)
+async def set_booking_id_state(message: Message, state: FSMContext) -> None:
+    booking_id = message.text
+
+    if not booking_id.isdigit():
+        await message.answer('Введите валидный ID бронирования')
+        return
+
+    if int(booking_id) <= 0:
+        await message.answer('ID бронирования должен быть больше нуля')
+        return
+
+    await state.update_data(booking_id=int(booking_id))
+    state_data = await state.get_data()
+
+    try:
+        await utils.delete_booking(state_data['booking_id'])
+        await message.answer('Бронирование успешно удалено')
+    except:
+        await message.answer(
+            'При попытке удалить бронирование произошла ошибка. Убедитесь, что бронирование с введенным ID существует'
+        )
+    finally:
+        await state.clear()
