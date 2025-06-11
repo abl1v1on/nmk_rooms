@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from pydantic import PositiveInt
+from typing import Annotated
 
 from .service import SERVICE_DEP
 from .schemas import (
@@ -13,9 +14,12 @@ from api.equipments.schemas import CreateEquipmentSchema
 router = APIRouter(prefix='/rooms', tags=['Залы'])
 
 
-@router.get('/', response_model=list[GetRoomSchema])
-async def get_rooms(service: SERVICE_DEP):
-    return await service.get_rooms()
+@router.get('/')
+async def get_rooms(
+        service: SERVICE_DEP,
+        q: Annotated[str | None, Query()] = None
+    ) -> list[GetRoomSchema]:
+    return await service.get_rooms(q)
 
 
 @router.get('/{room_id}', response_model=GetRoomSchema | None)

@@ -16,8 +16,13 @@ class RoomAPIService(BaseAPIService[Room]):
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, model=Room)
 
-    async def get_rooms(self) -> list[Room]:
-        query = select(Room).options(selectinload(Room.location))
+    async def get_rooms(self, q: str | None) -> list[Room]:
+        query = select(Room)
+
+        if q:
+            query = query.filter(Room.number.icontains(q))
+
+        query = query.options(selectinload(Room.location))
         rooms = (await self.session.execute(query)).scalars().all()
         return rooms
 
