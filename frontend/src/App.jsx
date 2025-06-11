@@ -44,12 +44,12 @@ export default function App() {
         fetchUserId();
     }, []);
 
-    if (!isTWA) {
-        return <div
-            style={{textAlign: "center", fontSize: "24px"}}>
-            ⚠️ Доступ только через Telegram
-        </div>;
-    }
+//     if (!isTWA) {
+//         return <div
+//             style={{textAlign: "center", fontSize: "24px"}}>
+//             ⚠️ Доступ только через Telegram
+//         </div>;
+//     }
 
   return (
     <>

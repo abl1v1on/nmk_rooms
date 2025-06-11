@@ -27,7 +27,7 @@ async def get_user_token(tg_id: int) -> None:
 
 @main_router.message(CommandStart(), is_admin)
 async def handle_start_cmd(message: Message) -> None:
-    url = f"https://50f8-77-238-239-82.ngrok-free.app"
+    url = f"https://6210-77-238-239-82.ngrok-free.app"
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [

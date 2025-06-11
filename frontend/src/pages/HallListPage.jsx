@@ -69,34 +69,7 @@ export default function HallListPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="column is-3">
-                            <div className="field">
-                                <div className="control">
-                                    <div className="select is-fullwidth">
-                                        <select id="building-select">
-                                            <option>Все корпуса</option>
-                                            <option>Корпус А</option>
-                                            <option>Корпус Б</option>
-                                            <option>Корпус В</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column is-3">
-                            <div className="field">
-                                <div className="control">
-                                    <div className="select is-fullwidth">
-                                        <select id="capacity-select">
-                                            <option>Любая вместимость</option>
-                                            <option>До 10 человек</option>
-                                            <option>10-20 человек</option>
-                                            <option>20+ человек</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                         <div className="column is-2">
                             <button className="button is-primary is-fullwidth" id="apply-filters">
                                 <span className="icon">
@@ -113,15 +86,6 @@ export default function HallListPage() {
         <section className="section pt-2">
             <div className="container">
                 {renderHalls()}
-                <nav className="pagination is-centered mt-5" role="navigation" aria-label="pagination">
-                    <a className="pagination-previous" disabled>Назад</a>
-                    <a className="pagination-next">Вперед</a>
-                    <ul className="pagination-list">
-                        <li><a className="pagination-link is-current">1</a></li>
-                        <li><a className="pagination-link">2</a></li>
-                        <li><a className="pagination-link">3</a></li>
-                    </ul>
-                </nav>
             </div>
         </section>
         </>
