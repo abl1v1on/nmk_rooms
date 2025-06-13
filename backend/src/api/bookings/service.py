@@ -74,7 +74,10 @@ class BookingAPIService(BaseAPIService[Booking]):
     async def get_user_bookings(self, user_id: int) -> list[Booking]:
         query = select(Booking) \
             .filter(Booking.user_id == user_id) \
-            .options(selectinload(Booking.room).selectinload(Room.location))
+            .options(
+                selectinload(Booking.room).selectinload(Room.location),
+                selectinload(Booking.room).selectinload(Room.equipments)
+            )
         bookings = (await self.session.execute(query)).scalars().all()
         return bookings
 
