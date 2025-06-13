@@ -8,7 +8,7 @@ from .schemas import (
     CreateRoomSchema,
     AddEquipmentsToRoomSchema
 )
-from api.equipments.schemas import CreateEquipmentSchema
+from api.equipments.schemas import GetEquipmentSchema
 
 
 router = APIRouter(prefix='/rooms', tags=['Залы'])
@@ -20,6 +20,11 @@ async def get_rooms(
         q: Annotated[str | None, Query()] = None
     ) -> list[GetRoomSchema]:
     return await service.get_rooms(q)
+
+
+@router.get('/equipments', response_model=list[GetEquipmentSchema])
+async def get_room_equipments(service: SERVICE_DEP, room_id: PositiveInt):
+    return await service.get_room_equipments(room_id)
 
 
 @router.get('/{room_id}', response_model=GetRoomSchema | None)

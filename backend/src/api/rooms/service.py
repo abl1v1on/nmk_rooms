@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.models import Room, SESSION_DEP
+from core.models import Room, Equipment, SESSION_DEP
 from api.base_api_service import BaseAPIService
 from api.locations.service import LocationAPIService
 from api.equipments.service import EquipmentAPIService
@@ -39,6 +39,18 @@ class RoomAPIService(BaseAPIService[Room]):
             raise exceptions.RoomNotFoundException()
 
         return room
+    
+    async def get_room_equipments(self, room_id: int) -> list[Equipment]:
+        query = select(Room) \
+            .filter(Room.id == room_id) \
+            .options(selectinload(Room.equipments))
+        result = await self.session.execute(query)
+        room = result.scalar_one_or_none()
+
+        if not room:
+            raise exceptions.RoomNotFoundException()
+        
+        return room.equipments
 
     async def create_room(self, room: CreateRoomSchema) -> Room:
         if await self._is_exists(number=room.number):
