@@ -18,7 +18,7 @@ export default function MyBookingsPage({ userId }) {
         const fetchBookings = async () => {
             try {
                 const response = await axios.get(
-                    `${config.baseUrl}/bookings/user-bookings?user_id=${userId}`
+                    `${config.baseUrl}/bookings/user-bookings?user_id=1`
                 );
                 setBookings(response.data);
                 setInitialBookings(response.data);
