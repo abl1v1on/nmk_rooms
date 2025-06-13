@@ -5,11 +5,10 @@ export default function SingleBooking({ booking, handleDeleteBooking }) {
 
         if (bookingDate < currentDate) {
             return "Завершено";
-        } else {
-            return "Подтверждено"
         }
+        return "Подтверждено"
     };
-
+    
     return (
         <div className="booking-card">
             <div className="booking-card-header">
