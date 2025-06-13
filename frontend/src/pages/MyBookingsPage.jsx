@@ -10,7 +10,9 @@ import Loader from "../components/Loader.jsx";
 
 export default function MyBookingsPage({ userId }) {
     const [bookings, setBookings] = useState([]);
+    const [initialBookings, setInitialBookings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedBookingStatus, setSelectedBookingStatus] = useState("all");
 
     useEffect(() => {
         const fetchBookings = async () => {
@@ -19,6 +21,7 @@ export default function MyBookingsPage({ userId }) {
                     `${config.baseUrl}/bookings/user-bookings?user_id=${userId}`
                 );
                 setBookings(response.data);
+                setInitialBookings(response.data);
             } catch (error) {
                 console.log(error);
                 alert("Error");
@@ -41,6 +44,31 @@ export default function MyBookingsPage({ userId }) {
             console.log(error);
             alert("Error");
         }
+    };
+
+    const getBookingDateObject = (bookingDate) => {
+        return new Date(bookingDate).setHours(
+            0, 0, 0, 0
+        );
+    }
+
+    const filterBookingsByStatus = (status) => {
+        if (status === selectedBookingStatus) return;
+
+        setSelectedBookingStatus(status);
+        const currentDate = new Date().setHours(0, 0, 0, 0);        
+
+        if (status === "all") {
+            setBookings(initialBookings);
+        } else if (status === "complete") {
+            setBookings(initialBookings.filter(booking => {
+                return getBookingDateObject(booking.booking_date) < currentDate;
+            }));
+        } else if (status === 'upcoming') {
+            setBookings(initialBookings.filter(booking => {
+                return getBookingDateObject(booking.booking_date) >= currentDate;
+            }));
+        }
     }
 
     const renderBookings = () => {
@@ -48,10 +76,10 @@ export default function MyBookingsPage({ userId }) {
             return (
                 <div className="bookings-list">
                     {bookings.map((booking) => (
-                    <SingleBooking
-                        booking={booking}
-                        handleDeleteBooking={handleDeleteBooking}
-                    />
+                        <SingleBooking
+                            booking={booking}
+                            handleDeleteBooking={handleDeleteBooking}
+                        />
                     ))}
                 </div>
             )
@@ -101,10 +129,9 @@ export default function MyBookingsPage({ userId }) {
             <div className="filter-tabs">
                 <div className="tabs is-boxed">
                     <ul>
-                        <li className="is-active"><a>Все</a></li>
-                        <li><a>Предстоящие</a></li>
-                        <li><a>Завершенные</a></li>
-                        <li><a>Отмененные</a></li>
+                        <li onClick={() => filterBookingsByStatus("all")} className={selectedBookingStatus === "all" ? "is-active" : ""} value="all"><a>Все</a></li>
+                        <li onClick={() => filterBookingsByStatus("upcoming")} className={selectedBookingStatus === "upcoming" ? "is-active" : ""} value="upcoming"><a>Предстоящие</a></li>
+                        <li onClick={() => filterBookingsByStatus("complete")} className={selectedBookingStatus === "complete" ? "is-active" : ""} value="complete"><a>Завершенные</a></li>
                     </ul>
                 </div>
             </div>
