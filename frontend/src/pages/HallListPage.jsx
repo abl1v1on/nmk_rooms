@@ -8,7 +8,9 @@ import HallCard from "../components/HasllCard.jsx";
 
 export default function HallListPage() {
     const [halls, setHalls] = useState([]);
+    const [initialHalls, setInitialHalls] = useState();
     const [isLoading, setIsLoading] = useState(true);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         const fetchHalls = async () => {
@@ -17,6 +19,7 @@ export default function HallListPage() {
                     `${config.baseUrl}/rooms`
                 );
                 setHalls(response.data);
+                setInitialHalls(response.data);
             } catch (error) {
                 alert('Error');
                 console.log(error);
@@ -28,6 +31,18 @@ export default function HallListPage() {
         fetchHalls();
     }, []);
 
+    const searchHalls = (e) => {
+        e.preventDefault();
+        if (search.trim().length > 0) {
+            setHalls(
+                initialHalls.filter(hall => String(hall.number).includes(search))
+            );
+        } else {
+            setSearch("");
+            setHalls(initialHalls);
+        }
+    };
+
     const renderHalls = () => {
         if (isLoading) {
             return <Loader />
@@ -35,50 +50,53 @@ export default function HallListPage() {
 
         return (
             <div className="columns is-multiline mt-1">
-                {halls.map((hall) => (
-                    <HallCard hall={hall} key={hall.id} />
-                ))}
+                {halls.length > 0 ? (
+                    halls.map((hall) => (
+                        <HallCard hall={hall} key={hall.id} />
+                    ))
+                ): (
+                    <div className="no-bookings">
+                        <span className="icon is-large has-text-grey-light mb-4">
+                            <i className="fas fa-calendar-times fa-3x"></i>
+                        </span>
+                        <h3 className="title is-4 has-text-grey">
+                            Мы не смогли найти залы по вашему запросу
+                        </h3>
+                    </div>
+                )}
             </div>
         )
+
     }
 
     return (
         <>
-        <section className="section pt-4 pb-2 mt-4">
-            <div className="container">
-                <nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-                    <ul>
-                        <li><a href="">Главная</a></li>
-                        <li className="is-active"><a href="#" aria-current="page">Все залы</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </section>
-
         <section className="section pt-2 pb-2">
             <div className="container">
                 <div className="box">
+                    <form action="" method="get" onSubmit={searchHalls}>
                     <div className="columns is-vcentered">
-                        <div className="column is-4">
-                            <div className="field">
-                                <div className="control has-icons-left">
-                                    <input className="input" type="text" placeholder="Поиск по названию..." />
-                                    <span className="icon is-small is-left">
-                                        <i className="fas fa-search"></i>
-                                    </span>
+                            <div className="column is-10">
+                                <div className="field">
+                                    <div className="control has-icons-left">
+                                        <input onChange={(e) => setSearch(e.target.value)} className="input" type="text" placeholder="Поиск по названию..." value={search} />
+                                        <span className="icon is-small is-left">
+                                            <i className="fas fa-search"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="column is-2">
-                            <button className="button is-primary is-fullwidth" id="apply-filters">
-                                <span className="icon">
-                                    <i className="fas fa-filter"></i>
-                                </span>
-                                <span>Применить</span>
-                            </button>
-                        </div>
+                            <div className="column is-2">
+                                <button onClick={searchHalls} className="button is-primary is-fullwidth" id="apply-filters">
+                                    <span className="icon">
+                                        <i className="fas fa-filter"></i>
+                                    </span>
+                                    <span>Применить</span>
+                                </button>
+                            </div>
                     </div>
+                    </form>
                 </div>
             </div>
         </section>
