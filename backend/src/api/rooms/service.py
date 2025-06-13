@@ -22,7 +22,7 @@ class RoomAPIService(BaseAPIService[Room]):
         if q:
             query = query.filter(Room.number.icontains(q))
 
-        query = query.options(selectinload(Room.location))
+        query = query.options(selectinload(Room.location), selectinload(Room.equipments))
         rooms = (await self.session.execute(query)).scalars().all()
         return rooms
 
@@ -64,7 +64,7 @@ class RoomAPIService(BaseAPIService[Room]):
         await self.session.commit()
 
         query = select(Room) \
-            .options(selectinload(Room.location)) \
+            .options(selectinload(Room.location), selectinload(Room.equipments)) \
             .where(Room.id == new_room.id)
         room_with_location = (await self.session.execute(query)).scalar()
 
