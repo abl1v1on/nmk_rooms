@@ -16,7 +16,6 @@ import PageNotFound from "./pages/PageNotFound.jsx";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import config from "./config.js";
-import Loader from "./components/Loader.jsx";
 
 
 export default function App() {
@@ -44,12 +43,12 @@ export default function App() {
         fetchUserId();
     }, []);
 
-//     if (!isTWA) {
-//         return <div
-//             style={{textAlign: "center", fontSize: "24px"}}>
-//             ⚠️ Доступ только через Telegram
-//         </div>;
-//     }
+    if (!isTWA) {
+        return <div
+            style={{textAlign: "center", fontSize: "24px"}}>
+            ⚠️ Доступ только через Telegram
+        </div>;
+    }
 
   return (
     <>
